@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AppTestTool</string>
+    <string name="design">Design</string>
+    <string name="accessibility">Accessibility</string>
+    <string name="convenience">Convenience</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="you_can_write_a_short_review">You can write a short review</string>
+</resources>
