@@ -13,97 +13,25 @@
         android:textSize="18sp"
         android:id="@+id/tv_activity_name"/>
 
-    <ScrollView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_criterions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:listitem="@layout/item_criterion"
         android:layout_below="@+id/tv_activity_name"
-        android:layout_above="@+id/ll_button_box">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/design"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_weight="1"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/cb_design"/>
-                <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:max="100"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/cb_design"
-                    android:id="@+id/sb_design"/>
-            </RelativeLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/accessibility"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_weight="1"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/cb_accessibility"/>
-                <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:max="100"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/cb_accessibility"
-                    android:id="@+id/sb_accessibility"/>
-            </RelativeLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/convenience"/>
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <CheckBox
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_weight="1"
-                    android:layout_centerVertical="true"
-                    android:id="@+id/cb_convenience"/>
-                <SeekBar
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:max="100"
-                    android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/cb_convenience"
-                    android:id="@+id/sb_convenience"/>
-            </RelativeLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/you_can_write_a_short_review"/>
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/et_review"/>
-
-        </LinearLayout>
-    </ScrollView>
-
+        android:layout_above="@+id/tv_label2"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rv_criterions"
+        android:id="@+id/tv_label2"
+        android:text="@string/you_can_write_a_short_review"
+        android:layout_above="@+id/et_review"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/et_review"
+        android:layout_above="@+id/ll_button_box"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
