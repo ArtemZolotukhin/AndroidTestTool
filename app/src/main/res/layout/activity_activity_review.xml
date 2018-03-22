@@ -17,7 +17,6 @@
         android:id="@+id/rv_criterions"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_criterion"
         android:layout_below="@+id/tv_activity_name"
         android:layout_above="@+id/tv_label2"/>
     <TextView
