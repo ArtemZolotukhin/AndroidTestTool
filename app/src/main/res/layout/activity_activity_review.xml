@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000"
     tools:context="com.example.rz.apptesttool.view.ActivityReviewActivity">
 
     <TextView
@@ -11,7 +12,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textSize="18sp"
-        android:id="@+id/tv_activity_name"/>
+        android:id="@+id/tv_activity_name"
+        android:textColor="#FFF"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_criterions"
@@ -19,19 +21,23 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/item_criterion"
         android:layout_below="@+id/tv_activity_name"
-        android:layout_above="@+id/tv_label2"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rv_criterions"
-        android:id="@+id/tv_label2"
-        android:text="@string/you_can_write_a_short_review"
         android:layout_above="@+id/et_review"/>
     <EditText
+        android:background="@drawable/rounded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_review"
-        android:layout_above="@+id/ll_button_box"/>
+        android:paddingStart="5dp"
+        android:textCursorDrawable="@null"
+        android:layout_above="@+id/ll_button_box"
+        android:hint="Ваш комментарий..."
+        android:textColor="#FFF"
+        android:imeOptions="actionDone"
+        android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
+        android:maxLength="200"
+        android:padding="5dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColorHint="#FFF"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
