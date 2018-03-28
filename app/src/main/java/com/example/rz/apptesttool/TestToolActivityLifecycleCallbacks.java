@@ -2,19 +2,17 @@ package com.example.rz.apptesttool;
 
 import android.app.Activity;
 import android.app.Application;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.example.rz.apptesttool.view.ActivityReviewActivity;
+import com.example.rz.apptesttool.mvp.view.ActivityReviewActivity;
+import com.example.rz.apptesttool.view.MoveButton;
 
 
 /**
@@ -28,11 +26,12 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     public static final String INTENT_IS_TEST_BUTTON_CREATED = "TestTool:isTestButtonExists";
 
     //TODO rewrite on annotation based... may be :)
-    public static final String EXCLUDED_ACTIVITY = "com.example.rz.apptesttool.view.ActivityReviewActivity";
+    public static final String EXCLUDED_ACTIVITY = "com.example.rz.apptesttool.mvp.view.ActivityReviewActivity";
 
     private Context context;
 
     private boolean buttonIsMove;
+    private boolean buttonInFocus;
 
     public TestToolActivityLifecycleCallbacks(Context context) {
         if (context == null) {
@@ -62,6 +61,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
         boolean isButtonExists = intent.getBooleanExtra(INTENT_IS_TEST_BUTTON_CREATED, false);
 
         if (!isButtonExists) {
+            activity.getWindow().getDecorView();
             //TODO normal
             FrameLayout frameLayout = new FrameLayout(activity);
             FrameLayout.LayoutParams rootParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -73,23 +73,52 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
             Button btn = new Button(context);
             btn.setText("X");
-
+//            btn.setOnLongClickListener(view -> {
+//                view.startDrag(null,
+//                        new View.DragShadowBuilder(view), null, 0);
+//                return true;
+//            });
+//            btn.setOnDragListener((view, dragEvent) -> {
+//                switch (dragEvent.getAction()) {
+//                    case DragEvent.ACTION_DRAG_STARTED:
+//                        view.setVisibility(View.INVISIBLE);
+//                        break;
+//                    case DragEvent.ACTION_DRAG_LOCATION:
+//                        view.setTranslationX(dragEvent.getX());
+//                        view.setTranslationY(dragEvent.getY());
+//                    case DragEvent.ACTION_DRAG_ENDED:
+//                        view.setVisibility(View.VISIBLE);
+//                        break;
+//
+//                }
+//                return true;
+//            });
+            btn.setOnLongClickListener(view -> {
+                buttonIsMove = true;
+                return true;
+            });
+            //Я хочу умереть...
             btn.setOnTouchListener((view, motionEvent) -> {
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_MOVE:
-                        buttonIsMove = true;
-                        btn.setX(motionEvent.getRawX() - btn.getWidth() / 2);
-                        btn.setY(motionEvent.getRawY() - btn.getHeight() / 2);
+                        if (buttonIsMove) {
+                            btn.setX(motionEvent.getRawX() - btn.getWidth() / 2);
+                            btn.setY(motionEvent.getRawY() - btn.getHeight() / 2);
+                        }
                         return true;
                     case MotionEvent.ACTION_UP:
                         if (buttonIsMove) {
                             buttonIsMove = false;
+                            return true;
                         } else {
-                            startActivityReview(activity);
+                            return false;
                         }
-                        return true;
+                    default:
+                        return false;
                 }
-                return false;
+            });
+            btn.setOnClickListener(view -> {
+                startActivityReview(activity);
             });
             activity.getWindow().addContentView(btn, params);
             intent.putExtra(INTENT_IS_TEST_BUTTON_CREATED, true);

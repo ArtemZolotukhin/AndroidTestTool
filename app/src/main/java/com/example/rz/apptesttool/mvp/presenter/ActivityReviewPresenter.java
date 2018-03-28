@@ -1,6 +1,6 @@
-package com.example.rz.apptesttool.presenter;
+package com.example.rz.apptesttool.mvp.presenter;
 
-import com.example.rz.apptesttool.view.ActivityReviewView;
+import com.example.rz.apptesttool.mvp.view.ActivityReviewView;
 
 /**
  * Created by rz on 20.03.18.

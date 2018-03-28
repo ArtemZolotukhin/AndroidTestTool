@@ -1,6 +1,5 @@
-package com.example.rz.apptesttool.view;
+package com.example.rz.apptesttool.mvp.view;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,7 @@ import android.widget.TextView;
 
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.RecyclerAdapter;
-import com.example.rz.apptesttool.presenter.ActivityReviewPresenter;
+import com.example.rz.apptesttool.mvp.presenter.ActivityReviewPresenter;
 
 public class ActivityReviewActivity extends AppCompatActivity implements ActivityReviewView {
 
