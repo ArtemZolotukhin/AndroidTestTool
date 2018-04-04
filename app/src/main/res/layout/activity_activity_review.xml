@@ -4,62 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
+    android:background="#12324B"
     tools:context="com.example.rz.apptesttool.view.ActivityReviewActivity">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textSize="18sp"
+        android:textSize="25sp"
         android:id="@+id/tv_activity_name"
         android:textColor="#FFF"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#505050"
+        android:layout_below="@+id/tv_activity_name"
+        android:id="@+id/view2" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_criterions"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:listitem="@layout/item_criterion"
         android:layout_below="@+id/tv_activity_name"
-        android:layout_above="@+id/et_review"/>
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        >
     <EditText
-        android:background="@drawable/rounded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/et_review"
-        android:paddingStart="5dp"
         android:textCursorDrawable="@null"
-        android:layout_above="@+id/ll_button_box"
         android:hint="Ваш комментарий..."
-        android:textColor="#FFF"
+        android:textColor="#849BAE"
         android:imeOptions="actionDone"
         android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
         android:maxLength="200"
-        android:padding="5dp"
+        android:padding="10dp"
+        android:backgroundTint="#1DBAC5"
+        android:layout_marginTop="20dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColorHint="#FFF"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/ll_button_box"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:layout_alignParentBottom="true">
-        <Button
-            android:layout_width="0dp"
+        android:textColorHint="#849BAE"
+        />
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel"
-            android:textAllCaps="false"
-            android:id="@+id/btn_cancel"/>
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/confirm"
-            android:textAllCaps="false"
-            android:id="@+id/btn_confirm"/>
+            android:id="@+id/ll_button_box"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="20dp"
+
+            >
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:background="#08C3CC"
+                android:id="@+id/btn_cancel"/>
+            <Button
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/confirm"
+                android:textAllCaps="false"
+                android:layout_marginEnd="10dp"
+                android:background="#08C3CC"
+                android:id="@+id/btn_confirm"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
     </LinearLayout>
+</ScrollView>
+
+
 
 
 

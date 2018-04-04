@@ -1,6 +1,7 @@
 package com.example.rz.apptesttool.view;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     private ActivityReviewPresenter presenter;
     private RecyclerView recyclerView;
-
+    private Context context = this;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +28,11 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         recyclerView = findViewById(R.id.rv_criterions);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         String [] array = {"Первый критерий", "Второй критерий", "Третий критерий", "Четвертый критерий", "Пятый шоб листалось"};
-        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(array);
+        RecyclerAdapter recyclerAdapter = new RecyclerAdapter(array, context);
         recyclerView.setAdapter(recyclerAdapter);
 
         ( (TextView) findViewById(R.id.tv_activity_name)).setText(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
+        ((TextView) findViewById(R.id.tv_activity_name)).setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
 
         findViewById(R.id.btn_cancel).setOnClickListener(view -> {
             presenter.onCloseClick();
