@@ -100,11 +100,12 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             //Я хочу умереть...
             btn.setOnTouchListener((view, motionEvent) -> {
                 switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        return true;
                     case MotionEvent.ACTION_MOVE:
-                        if (buttonIsMove) {
-                            btn.setX(motionEvent.getRawX() - btn.getWidth() / 2);
+                           btn.setX(motionEvent.getRawX() - btn.getWidth() / 2);
                             btn.setY(motionEvent.getRawY() - btn.getHeight() / 2);
-                        }
+                            buttonIsMove = true;
                         return true;
                     case MotionEvent.ACTION_UP:
                         if (buttonIsMove) {
@@ -167,6 +168,8 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             intent.putExtra(INTENT_IS_TEST_BUTTON_CREATED, false);
         }
     }
+
+
 
 
 }

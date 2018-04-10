@@ -1,60 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp">
-
+    android:layout_height="150dp">
 
 
     <TextView
         android:id="@+id/param_name"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="20dp"
-        android:textSize="25sp"
-        android:layout_marginTop="20dp"
-        android:textColor="#FFF"/>
+        android:layout_height="35dp"
+        android:layout_above="@+id/oc"
+        android:layout_alignStart="@+id/oc"
+        android:layout_marginBottom="13dp"
+        android:text="PERVIY"
+        android:textColor="#FFF"
+        android:textSize="25sp" />
 
+    <TextView
+        android:id="@+id/oc"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/param_bar"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="27dp"
+        android:layout_marginStart="16dp"
+        android:text="Оценка: "
+        android:textColor="#FFF"
+        android:textSize="25sp" />
+    
     <TextView
         android:id="@+id/rate"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:gravity="center_horizontal"
-        android:textColor="#FFF"
-        android:layout_toEndOf="@+id/param_bar"
-        android:layout_toStartOf="@+id/param_check"
+        android:layout_height="35dp"
         android:textSize="25sp"
-        android:layout_alignBottom="@+id/param_bar"
-        />
+        android:layout_toRightOf="@+id/oc"
+        android:layout_alignBottom="@+id/oc"
+        android:textColor="#FFF"/>
+
 
     <SeekBar
         android:id="@+id/param_bar"
-        android:layout_width="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:max="10"
         android:maxHeight="3dp"
         android:minHeight="3dp"
-        android:max="10"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/param_name"
         android:progressDrawable="@drawable/rate_bar"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
-        android:thumbTint="#FFF"
-        />
+        android:thumbTint="#1DBAC5" />
 
     <CheckBox
         android:id="@+id/param_check"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_alignBottom="@id/param_bar"
+        android:layout_alignBaseline="@+id/param_name"
+        android:layout_alignBottom="@+id/param_name"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:buttonTint="#FFF"
-
-        />
+        android:layout_marginEnd="12dp"
+        android:buttonTint="#1DBAC5" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#FFF"/>
+        android:background="#167182"
+        android:id="@+id/view2" />
 
 
 </RelativeLayout>
