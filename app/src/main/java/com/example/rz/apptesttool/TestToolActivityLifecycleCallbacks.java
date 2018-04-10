@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -73,26 +74,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
             Button btn = new Button(context);
             btn.setText("X");
-//            btn.setOnLongClickListener(view -> {
-//                view.startDrag(null,
-//                        new View.DragShadowBuilder(view), null, 0);
-//                return true;
-//            });
-//            btn.setOnDragListener((view, dragEvent) -> {
-//                switch (dragEvent.getAction()) {
-//                    case DragEvent.ACTION_DRAG_STARTED:
-//                        view.setVisibility(View.INVISIBLE);
-//                        break;
-//                    case DragEvent.ACTION_DRAG_LOCATION:
-//                        view.setTranslationX(dragEvent.getX());
-//                        view.setTranslationY(dragEvent.getY());
-//                    case DragEvent.ACTION_DRAG_ENDED:
-//                        view.setVisibility(View.VISIBLE);
-//                        break;
-//
-//                }
-//                return true;
-//            });
             btn.setOnLongClickListener(view -> {
                 buttonIsMove = true;
                 return true;
@@ -112,16 +93,50 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
                             buttonIsMove = false;
                             return true;
                         } else {
+                            view.callOnClick();
                             return false;
                         }
                     default:
                         return false;
                 }
             });
+
+            frameLayout.addView(btn, params);
+            frameLayout.setOnTouchListener((view, motionEvent) -> {
+
+                String tag = "FRAME_LAYOUT";
+
+                String event;
+
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_CANCEL:
+                        event = "cancel";
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        event = "down";
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        event = "move";
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        event = "up";
+                        break;
+                    case MotionEvent.ACTION_OUTSIDE:
+                        event = "outside";
+                        break;
+                    default:
+                        event = "unknown";
+                        break;
+                }
+
+                Log.d(tag, event + ": " + motionEvent.getRawX() + " " + motionEvent.getRawY());
+
+                return false;
+            });
             btn.setOnClickListener(view -> {
                 startActivityReview(activity);
             });
-            activity.getWindow().addContentView(btn, params);
+            activity.getWindow().addContentView(frameLayout, rootParams);
             intent.putExtra(INTENT_IS_TEST_BUTTON_CREATED, true);
         }
     }
