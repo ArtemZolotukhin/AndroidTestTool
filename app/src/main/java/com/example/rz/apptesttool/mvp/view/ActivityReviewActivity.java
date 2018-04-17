@@ -6,11 +6,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.RecyclerAdapter;
+import com.example.rz.apptesttool.mvp.model.StatisticRepositoryImpl;
+import com.example.rz.apptesttool.mvp.model.TouchInfo;
 import com.example.rz.apptesttool.mvp.presenter.ActivityReviewPresenter;
+
+import java.util.ArrayList;
 
 public class ActivityReviewActivity extends AppCompatActivity implements ActivityReviewView {
 
@@ -19,10 +26,19 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     private ActivityReviewPresenter presenter;
     private RecyclerView recyclerView;
     private Context context = this;
+    private Button mSendButton;
+    private Button mCancelButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
+
+        StatisticRepositoryImpl statisticRepository = new StatisticRepositoryImpl(context);
+        mSendButton = (Button) findViewById(R.id.btn_confirm);
+        mCancelButton = (Button) findViewById(R.id.btn_cancel);
+
 
         presenter = new ActivityReviewPresenter(this);
         recyclerView = findViewById(R.id.rv_criterions);
