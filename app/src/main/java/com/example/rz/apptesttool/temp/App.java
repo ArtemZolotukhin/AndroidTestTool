@@ -12,6 +12,6 @@ public class App extends TestToolApplication {
     public void onCreate() {
         super.onCreate();
         setTestMode(true);
-
+        setBaseUrl("http://localhost:8080");
     }
 }

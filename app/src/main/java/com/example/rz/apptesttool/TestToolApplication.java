@@ -13,6 +13,26 @@ public class TestToolApplication extends Application {
 
     private boolean isTestMode;
 
+    private static String baseUrl = "";
+
+    private static String appId = "0";
+
+    public static String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public static String getAppId() {
+        return appId;
+    }
+
+    public static void setAppId(String appId) {
+        TestToolApplication.appId = appId;
+    }
+
+    public static void setBaseUrl(String baseUrl) {
+        TestToolApplication.baseUrl = baseUrl;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
