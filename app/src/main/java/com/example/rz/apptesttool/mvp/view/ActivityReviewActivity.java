@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.RecyclerAdapter;
 import com.example.rz.apptesttool.mvp.model.StatisticRepositoryImpl;
+import com.example.rz.apptesttool.mvp.model.TimeInfo;
 import com.example.rz.apptesttool.mvp.model.TouchInfo;
 import com.example.rz.apptesttool.mvp.presenter.ActivityReviewPresenter;
 
@@ -34,10 +35,12 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
-
-        StatisticRepositoryImpl statisticRepository = new StatisticRepositoryImpl(context);
         mSendButton = (Button) findViewById(R.id.btn_confirm);
         mCancelButton = (Button) findViewById(R.id.btn_cancel);
+
+        mSendButton.setOnClickListener(view -> {
+
+        });
 
 
         presenter = new ActivityReviewPresenter(this);

@@ -11,9 +11,16 @@ import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.example.rz.apptesttool.mvp.model.StatisticRepository;
+import com.example.rz.apptesttool.mvp.model.StatisticRepositoryImpl;
+import com.example.rz.apptesttool.mvp.model.TimeInfo;
+import com.example.rz.apptesttool.mvp.model.TouchInfo;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewActivity;
 import com.example.rz.apptesttool.view.MoveButton;
+
+import java.util.ArrayList;
 
 
 /**
@@ -34,6 +41,10 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     private boolean buttonIsMove;
     private boolean buttonInFocus;
 
+    private long time1;
+    private TimeInfo timeInfo;
+    private long currentTime;
+
     public TestToolActivityLifecycleCallbacks(Context context) {
         if (context == null) {
             throw new NullPointerException("Context must be not null!");
@@ -45,6 +56,11 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
         dropTestToolSettingsInActivity(activity);
+        TimeInfo timeInfo = new TimeInfo();
+        timeInfo.setActivity(activity.getClass().getName());
+        timeInfo.setTime(0);
+        StatisticRepositoryImpl repository = StatisticRepositoryImpl.getInstance(context);
+        repository.putTimeInfo(timeInfo);
     }
 
     @Override
@@ -54,6 +70,14 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     @Override
     public void onActivityResumed(Activity activity) {
+        time1 = System.currentTimeMillis();
+        StatisticRepositoryImpl statisticRepository = StatisticRepositoryImpl.getInstance(context);
+        timeInfo = statisticRepository.getTimeInfoByActivity(activity.getClass().getName());
+        currentTime = timeInfo.getTime();
+
+
+
+
         if (activity.getClass().getName().equals(EXCLUDED_ACTIVITY)) {
             return;
         }
@@ -150,7 +174,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     @Override
     public void onActivityPaused(Activity activity) {
-
+        StatisticRepositoryImpl.getInstance(context).updateTimeInfo(currentTime + System.currentTimeMillis() - time1, timeInfo);
     }
 
     @Override
