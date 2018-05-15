@@ -14,12 +14,12 @@ import android.widget.TextView;
  * Created by Марат on 22.03.2018.
  */
 
-public class RecyclerAdapter extends RecyclerView.Adapter <RecyclerAdapter.AdapterViewHolder> {
+public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.AdapterViewHolder> {
 
     private String [] array;
     private Context context;
 
-    public RecyclerAdapter (String [] array, Context context) {
+    public ReviewAdapter(String [] array, Context context) {
         this.array = array;
         this.context = context;
     }
@@ -27,13 +27,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter <RecyclerAdapter.Adapt
 
 
     @Override
-    public RecyclerAdapter.AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReviewAdapter.AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_criterion, parent, false);
-        return new RecyclerAdapter.AdapterViewHolder(view);
+        return new ReviewAdapter.AdapterViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter.AdapterViewHolder holder, int position) {
+    public void onBindViewHolder(ReviewAdapter.AdapterViewHolder holder, int position) {
           holder.crit.setText(array[position]);
           holder.rate.setText("0");
           holder.bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

@@ -1,10 +1,12 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.retrofit.ReviewServ;
 import com.example.rz.apptesttool.mvp.model.retrofit.pojo.ReviewForm;
 import com.example.rz.apptesttool.mvp.service.ReviewToReviewFormConverter;
 import com.example.rz.apptesttool.mvp.service.ReviewToReviewFormConverterImpl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -53,12 +55,26 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Set<Criterion> getCriteries(Callback<Response<Set<Criterion>, Integer>> callback) {
+    public void getCriteries(Callback<Response<Set<Criterion>, Integer>> callback) {
+        //TODO Cache
+        CriteriesForm criteriesForm = getCriteriesForm();
+        reviewServ.categories(criteriesForm)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(criteriesResponse -> {
+                    if (criteriesResponse != null) {
+                        Set<Criterion> criteria = new HashSet<>();
+                        criteria.addAll(criteriesResponse.getCriteries());
+                        callback.call(Response.success(criteria));
+                    }
+                }, throwable -> {
+                    callback.call(Response.failure(1));
+                });
 
-
-
-        return null;
     }
 
 
+    public CriteriesForm getCriteriesForm() {
+        return new CriteriesForm(TestToolApplication.getAppId());
+    }
 }

@@ -5,96 +5,109 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#12324B"
-    tools:context="com.example.rz.apptesttool.view.ActivityReviewActivity">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textSize="25sp"
-        android:id="@+id/tv_activity_name"
-        android:textColor="#FFF"/>
+    tools:context="com.example.rz.apptesttool.mvp.view.ActivityReviewActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#505050"
-        android:layout_below="@+id/tv_activity_name"
-        android:id="@+id/view2" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_criterions"
-        android:layout_width="match_parent"
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/item_criterion"
-        android:layout_below="@+id/tv_activity_name"
-        />
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
 
-    <RelativeLayout
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        >
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/et_review"
-        android:textCursorDrawable="@null"
-        android:hint="Ваш комментарий..."
-        android:textColor="#849BAE"
-        android:imeOptions="actionDone"
-        android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
-        android:maxLength="200"
-        android:padding="10dp"
-        android:backgroundTint="#1DBAC5"
-        android:layout_marginTop="20dp"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColorHint="#849BAE"
-        />
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/box_criteries"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/ll_button_box"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
+            android:layout_height="match_parent"
+            android:visibility="visible">
 
-            >
-            <Button
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/cancel"
-                android:textAllCaps="false"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:background="#08C3CC"
-                android:id="@+id/btn_cancel"/>
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/confirm"
-                android:textAllCaps="false"
-                android:layout_marginEnd="10dp"
-                android:background="#08C3CC"
-                android:id="@+id/btn_confirm"/>
-        </LinearLayout>
+                android:orientation="vertical">
 
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_activity_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:textColor="#FFF"
+                    android:textSize="25sp" />
 
-    </LinearLayout>
-</ScrollView>
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_below="@+id/tv_activity_name"
+                    android:background="#505050" />
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_criterions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_activity_name"
+                    tools:listitem="@layout/item_criterion" />
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
 
+                    <EditText
+                        android:id="@+id/et_review"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:backgroundTint="#1DBAC5"
+                        android:hint="Ваш комментарий..."
+                        android:imeOptions="actionDone"
+                        android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
+                        android:maxLength="200"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#849BAE"
+                        android:textColorHint="#849BAE"
+                        android:textCursorDrawable="@null" />
 
+                    <LinearLayout
+                        android:id="@+id/ll_button_box"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="20dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
 
+                        >
+
+                        <Button
+                            android:id="@+id/btn_cancel"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:background="#08C3CC"
+                            android:text="@string/cancel"
+                            android:textAllCaps="false" />
+
+                        <Button
+                            android:id="@+id/btn_confirm"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="10dp"
+                            android:layout_weight="1"
+                            android:background="#08C3CC"
+                            android:text="@string/confirm"
+                            android:textAllCaps="false" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

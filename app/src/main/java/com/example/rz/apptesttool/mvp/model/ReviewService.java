@@ -10,6 +10,6 @@ public interface ReviewService {
 
     void sendReview(Review review, Callback<Response<Void, Integer>> callback);
 
-    Set<Criterion> getCriteries(Callback<Response<Set<Criterion>, Integer>> callback);
+    void getCriteries(Callback<Response<Set<Criterion>, Integer>> callback);
 
 }
