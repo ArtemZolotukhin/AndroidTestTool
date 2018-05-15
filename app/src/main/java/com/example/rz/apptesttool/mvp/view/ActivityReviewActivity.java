@@ -10,7 +10,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ScrollView;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.ReviewAdapter;
@@ -32,10 +34,21 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     private ScrollView scrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Context context = this;
+    private Button mSendButton;
+    private Button mCancelButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
+        mSendButton = (Button) findViewById(R.id.btn_confirm);
+        mCancelButton = (Button) findViewById(R.id.btn_cancel);
+
+        mSendButton.setOnClickListener(view -> {
+
+        });
+
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setEnabled(false);
