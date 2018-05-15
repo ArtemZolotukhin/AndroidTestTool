@@ -1,10 +1,12 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by rz on 4/10/18.
  */
 
-public class TimeInfo {
+public class TimeInfo extends RealmObject {
 
     private String activity;
 

@@ -1,10 +1,12 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import io.realm.RealmObject;
+
 /**
  * Created by rz on 4/10/18.
  */
 
-public class TouchInfo {
+public class TouchInfo extends RealmObject {
 
     private float x;
 
