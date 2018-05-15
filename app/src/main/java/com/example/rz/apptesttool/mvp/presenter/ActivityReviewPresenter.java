@@ -2,6 +2,7 @@ package com.example.rz.apptesttool.mvp.presenter;
 
 import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.Criterion;
+import com.example.rz.apptesttool.mvp.model.Review;
 import com.example.rz.apptesttool.mvp.model.ReviewService;
 import com.example.rz.apptesttool.mvp.model.ReviewServiceImpl;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewView;
@@ -12,7 +13,7 @@ import java.util.Set;
  * Created by rz on 20.03.18.
  */
 
-public class ActivityReviewPresenter {
+public class ActivityReviewPresenter extends AbstractPresenter{
 
     private ActivityReviewView view;
 
@@ -40,6 +41,19 @@ public class ActivityReviewPresenter {
             }
             getView().showError(ActivityReviewView.ERROR_CODE_LOAD);
             getView().setLoading(false);
+        });
+    }
+
+    public void onSendClick() {
+        Review review = view.getReview();
+        getView().setLoading(true);
+        reviewService.sendReview(review, voidIntegerResponse -> {
+            if (voidIntegerResponse.isSuccessfull()) {
+                view.close();
+            } else {
+                getView().setLoading(false);
+                view.showError(ActivityReviewView.ERROR_CODE_LOAD);
+            }
         });
     }
 

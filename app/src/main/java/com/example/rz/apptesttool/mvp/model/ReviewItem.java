@@ -10,12 +10,55 @@ public class ReviewItem {
 
     private int value;
 
+    private String name;
+
+    private int minValue;
+
+    private int maxValue;
+
     public ReviewItem() {
     }
 
     public ReviewItem(int id, int value) {
         this.id = id;
         this.value = value;
+    }
+
+    public ReviewItem(Integer id, Integer minValue, String name) {
+        this(id, minValue);
+        this.name = name;
+    }
+
+    public ReviewItem(int id, int value, String name, int minValue, int maxValue) {
+        this.id = id;
+        this.value = value;
+        this.name = name;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+    }
+
+    public int getMinValue() {
+        return minValue;
+    }
+
+    public void setMinValue(int minValue) {
+        this.minValue = minValue;
+    }
+
+    public int getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(int maxValue) {
+        this.maxValue = maxValue;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getId() {

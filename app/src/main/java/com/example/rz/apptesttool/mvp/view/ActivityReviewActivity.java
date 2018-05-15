@@ -3,24 +3,26 @@ package com.example.rz.apptesttool.mvp.view;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.ReviewAdapter;
 import com.example.rz.apptesttool.mvp.model.Criterion;
 import com.example.rz.apptesttool.mvp.model.Review;
+import com.example.rz.apptesttool.mvp.model.ReviewItem;
 import com.example.rz.apptesttool.mvp.presenter.ActivityReviewPresenter;
+import com.example.rz.apptesttool.tools.CollectionUtils;
 import com.example.rz.apptesttool.tools.FragmentObjectHolder;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class ActivityReviewActivity extends AppCompatActivity implements ActivityReviewView, SwipeRefreshLayout.OnRefreshListener {
@@ -56,8 +58,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         scrollView = findViewById(R.id.box_criteries);
         recyclerView = findViewById(R.id.rv_criterions);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        String [] array = {"Первый критерий", "Второй критерий", "Третий критерий", "Четвертый критерий", "Пятый шоб листалось"};
-        reviewAdapter = new ReviewAdapter(array, context);
+        reviewAdapter = new ReviewAdapter(context);
         recyclerView.setAdapter(reviewAdapter);
 
         ( (TextView) findViewById(R.id.tv_activity_name)).setText(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
@@ -90,7 +91,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
                         .findFragmentByTag(TAG_FRAGMENT_OBJECT_HOLDER);
         if (fragmentObjectHolder == null) {
             fragmentObjectHolder = new FragmentObjectHolder<>();
-            fragmentManager.beginTransaction().add(fragmentObjectHolder, TAG_FRAGMENT_OBJECT_HOLDER);
+            fragmentManager.beginTransaction().add(fragmentObjectHolder, TAG_FRAGMENT_OBJECT_HOLDER).commit();
         }
         return fragmentObjectHolder;
     }
@@ -108,19 +109,35 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     @Override
     public void setLoading(boolean isLoading) {
-        //TODO loading
         swipeRefreshLayout.setRefreshing(isLoading);
         scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void updateCriterions(Set<Criterion> criterionSet) {
-        //TODO update Criterions
+        Set<ReviewItem> reviewItemList = toReviewItemSet(criterionSet);
+        CollectionUtils collectionUtils = new CollectionUtils();
+        reviewAdapter.setItems(collectionUtils.toList(reviewItemList));
+    }
+
+    private Set<ReviewItem> toReviewItemSet(Set<Criterion> criterionSet) {
+        Set<ReviewItem> set = new HashSet<>();
+        for (Criterion i : criterionSet) {
+            if (i != null) {
+                set.add(toReviewItem(i));
+            }
+        }
+        return set;
+    }
+
+    private ReviewItem toReviewItem(Criterion criterion) {
+        return new ReviewItem(criterion.getId(), criterion.getMinValue(), criterion.getName(),
+                criterion.getMinValue(), criterion.getMaxValue());
     }
 
     @Override
     public Review getReview() {
-        //TODO review
+        //TODO getReview
         return null;
     }
 

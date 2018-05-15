@@ -10,73 +10,98 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.rz.apptesttool.mvp.model.Criterion;
+import com.example.rz.apptesttool.mvp.model.ReviewItem;
+
+import java.util.List;
+
 /**
  * Created by Марат on 22.03.2018.
  */
 
-public class ReviewAdapter extends RecyclerView.Adapter <ReviewAdapter.AdapterViewHolder> {
+public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewViewHolder> {
 
-    private String [] array;
     private Context context;
 
-    public ReviewAdapter(String [] array, Context context) {
-        this.array = array;
+    private List<ReviewItem> reviewItems;
+
+    public ReviewAdapter(Context context) {
         this.context = context;
     }
 
 
-
     @Override
-    public ReviewAdapter.AdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ReviewViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_criterion, parent, false);
-        return new ReviewAdapter.AdapterViewHolder(view);
+        return new ReviewViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ReviewAdapter.AdapterViewHolder holder, int position) {
-          holder.crit.setText(array[position]);
-          holder.rate.setText("0");
-          holder.bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-              @Override
-              public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                  holder.rate.setText(String.valueOf(seekBar.getProgress()));
-              }
-
-              @Override
-              public void onStartTrackingTouch(SeekBar seekBar) {
-
-              }
-
-              @Override
-              public void onStopTrackingTouch(SeekBar seekBar) {
-
-              }
-          });
+    public void onBindViewHolder(ReviewViewHolder holder, int position) {
+        if (reviewItems != null) {
+            ReviewItem item = reviewItems.get(position);
+            if (item != null) {
+                holder.update(item);
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return array.length;
+        return reviewItems == null ? 0 : reviewItems.size();
+    }
+
+    public void setItems(List<ReviewItem> reviewItems) {
+        this.reviewItems = reviewItems;
+        notifyDataSetChanged();
+    }
+
+    public List<ReviewItem> getReviewItems() {
+        return this.reviewItems;
     }
 
 
-    public class AdapterViewHolder extends RecyclerView.ViewHolder {
-        TextView crit;
-        TextView rate;
-        SeekBar bar;
-        CheckBox checkBox;
-        TextView oc;
+    public class ReviewViewHolder extends RecyclerView.ViewHolder {
+        private ReviewItem reviewItem;
+        private TextView criterionName;
+        private TextView rate;
+        private SeekBar bar;
+        private CheckBox checkBox;
+        private TextView oc;
 
-        public AdapterViewHolder(View itemView) {
+        public ReviewViewHolder(View itemView) {
             super(itemView);
-            crit = (TextView)itemView.findViewById(R.id.param_name);
-            crit.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
-            bar = (SeekBar) itemView.findViewById(R.id.param_bar);
-            checkBox = (CheckBox) itemView.findViewById(R.id.param_check);
-            rate = (TextView) itemView.findViewById(R.id.rate);
+            criterionName = itemView.findViewById(R.id.param_name);
+            criterionName.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+            bar = itemView.findViewById(R.id.param_bar);
+            checkBox = itemView.findViewById(R.id.param_check);
+            rate = itemView.findViewById(R.id.rate);
             rate.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
-            oc = (TextView)itemView.findViewById(R.id.oc);
+            oc = itemView.findViewById(R.id.oc);
             oc.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+        }
+
+        public void update(ReviewItem reviewItem) {
+            this.reviewItem = reviewItem;
+            criterionName.setText(reviewItem.getName());
+            rate.setText(String.valueOf(reviewItem.getValue()));
+            bar.setMax(reviewItem.getMaxValue() - reviewItem.getMinValue());
+            bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    int newValue = seekBar.getProgress() + reviewItem.getMinValue();
+                    ReviewViewHolder.this.reviewItem.setValue(newValue);
+                    rate.setText(String.valueOf(newValue));
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+                }
+            });
         }
     }
 }
