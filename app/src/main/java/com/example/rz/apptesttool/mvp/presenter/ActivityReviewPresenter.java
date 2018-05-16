@@ -1,5 +1,7 @@
 package com.example.rz.apptesttool.mvp.presenter;
 
+import android.util.Log;
+
 import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.Criterion;
 import com.example.rz.apptesttool.mvp.model.Review;
@@ -13,7 +15,9 @@ import java.util.Set;
  * Created by rz on 20.03.18.
  */
 
-public class ActivityReviewPresenter extends AbstractPresenter{
+public class ActivityReviewPresenter extends AbstractPresenter {
+
+    public static final String LOG_TAG = "AAAAAAAAAAAA";
 
     private ActivityReviewView view;
 
@@ -35,11 +39,13 @@ public class ActivityReviewPresenter extends AbstractPresenter{
             Set<Criterion> criterionSet = null;
             if (criterionsResponse.isSuccessfull()) {
                 criterionSet = criterionsResponse.getValue();
+                if (criterionSet != null) {
+                    getView().updateCriterions(criterionSet);
+                }
+            } else {
+                Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
+                getView().showError(ActivityReviewView.ERROR_CODE_LOAD);
             }
-            if (criterionSet != null) {
-                getView().updateCriterions(criterionSet);
-            }
-            getView().showError(ActivityReviewView.ERROR_CODE_LOAD);
             getView().setLoading(false);
         });
     }
@@ -58,7 +64,9 @@ public class ActivityReviewPresenter extends AbstractPresenter{
     }
 
     public void onCloseClick() {
-        view.close();
+        if (view != null) {
+            view.close();
+        }
     }
 
     public ActivityReviewView getView() {

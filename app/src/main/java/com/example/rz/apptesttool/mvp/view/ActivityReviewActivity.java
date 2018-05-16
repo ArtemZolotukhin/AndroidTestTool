@@ -10,8 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rz.apptesttool.R;
 import com.example.rz.apptesttool.ReviewAdapter;
@@ -23,6 +25,7 @@ import com.example.rz.apptesttool.tools.CollectionUtils;
 import com.example.rz.apptesttool.tools.FragmentObjectHolder;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ActivityReviewActivity extends AppCompatActivity implements ActivityReviewView, SwipeRefreshLayout.OnRefreshListener {
@@ -38,14 +41,16 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     private Context context = this;
     private Button mSendButton;
     private Button mCancelButton;
+    private EditText etReview;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
-        mSendButton = (Button) findViewById(R.id.btn_confirm);
-        mCancelButton = (Button) findViewById(R.id.btn_cancel);
+        mSendButton = findViewById(R.id.btn_confirm);
+        mCancelButton = findViewById(R.id.btn_cancel);
+        etReview = findViewById(R.id.et_review);
 
         mSendButton.setOnClickListener(view -> {
 
@@ -53,7 +58,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
 
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
-        swipeRefreshLayout.setEnabled(false);
+        swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(this);
         scrollView = findViewById(R.id.box_criteries);
         recyclerView = findViewById(R.id.rv_criterions);
@@ -117,7 +122,12 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     public void updateCriterions(Set<Criterion> criterionSet) {
         Set<ReviewItem> reviewItemList = toReviewItemSet(criterionSet);
         CollectionUtils collectionUtils = new CollectionUtils();
-        reviewAdapter.setItems(collectionUtils.toList(reviewItemList));
+        updateCriterions(collectionUtils.toList(reviewItemList));
+        swipeRefreshLayout.setEnabled(false);
+    }
+
+    private void updateCriterions(List<ReviewItem> items) {
+        reviewAdapter.setItems(items);
     }
 
     private Set<ReviewItem> toReviewItemSet(Set<Criterion> criterionSet) {
@@ -137,13 +147,22 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     @Override
     public Review getReview() {
-        //TODO getReview
-        return null;
+        if (reviewAdapter.getItemCount() == 0) {
+           return null;
+        }
+        Review review = new Review();
+        //TODO normal activity class name
+        review.setDisplayName(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
+        review.setMessage(etReview.getText().toString());
+        CollectionUtils collectionUtils = new CollectionUtils();
+        review.setReviewItemSet(collectionUtils.toSet(reviewAdapter.getReviewItems()));
+        return review;
     }
 
     @Override
     public void showError(int errorCode) {
-        //TODO show error
+        //TODO normal error
+        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
     }
 
     @Override

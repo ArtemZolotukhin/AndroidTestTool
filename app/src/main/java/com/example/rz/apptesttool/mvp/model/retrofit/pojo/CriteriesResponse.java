@@ -15,7 +15,7 @@ public class CriteriesResponse {
     @SerializedName("code")
     @Expose
     private Integer code;
-    @SerializedName("criteries")
+    @SerializedName("criterions")
     @Expose
     private List<Criterion> criteries = null;
 

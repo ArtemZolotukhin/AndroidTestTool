@@ -12,7 +12,7 @@ public class App extends TestToolApplication {
     public void onCreate() {
         super.onCreate();
         setTestMode(true);
-        setBaseUrl("http://localhost:8080/");
-        setAppId("1");
+        setBaseUrl("https://uxcapture.herokuapp.com/");
+        setAppId("2");
     }
 }

@@ -17,6 +17,6 @@ public interface ReviewServ {
     @POST("/review")
     Observable<ReviewResponse> reviewSend(@Body ReviewForm reviewForm);
 
-    @POST("/review/categories")
+    @POST("/review/criterions")
     Observable<CriteriesResponse> categories(@Body CriteriesForm criteriesForm);
 }

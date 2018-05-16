@@ -12,6 +12,7 @@ import java.util.Set;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
@@ -29,6 +30,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewServiceImpl(String baseUrl) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         reviewServ = retrofit.create(ReviewServ.class);
@@ -63,9 +65,15 @@ public class ReviewServiceImpl implements ReviewService {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(criteriesResponse -> {
                     if (criteriesResponse != null) {
-                        Set<Criterion> criteria = new HashSet<>();
-                        criteria.addAll(criteriesResponse.getCriteries());
-                        callback.call(Response.success(criteria));
+                        if (criteriesResponse.getCode() == 0) {
+                            Set<Criterion> criteria = new HashSet<>();
+                            criteria.addAll(criteriesResponse.getCriteries());
+                            callback.call(Response.success(criteria));
+                        } else {
+                            callback.call(Response.failure(criteriesResponse.getCode()));
+                        }
+                    } else {
+                        callback.call(Response.failure(1));
                     }
                 }, throwable -> {
                     callback.call(Response.failure(1));
