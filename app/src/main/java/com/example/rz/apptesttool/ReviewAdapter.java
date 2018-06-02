@@ -10,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.example.rz.apptesttool.mvp.model.Criterion;
 import com.example.rz.apptesttool.mvp.model.ReviewItem;
 
 import java.util.List;
@@ -63,6 +62,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
     public class ReviewViewHolder extends RecyclerView.ViewHolder {
         private ReviewItem reviewItem;
+        private View boxBar;
         private TextView criterionName;
         private TextView rate;
         private SeekBar bar;
@@ -71,19 +71,18 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
 
         public ReviewViewHolder(View itemView) {
             super(itemView);
+            boxBar = itemView.findViewById(R.id.box_bar);
             criterionName = itemView.findViewById(R.id.param_name);
             criterionName.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
             bar = itemView.findViewById(R.id.param_bar);
+            rate = itemView.findViewById(R.id.tv_rate);
+            rate.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+            oc = itemView.findViewById(R.id.tv_rate_title);
+            oc.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
             checkBox = itemView.findViewById(R.id.param_check);
             checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
-                if (reviewItem != null) {
-                    reviewItem.setChecked(checkBox.isChecked());
-                }
+                setActive(checkBox.isChecked());
             });
-            rate = itemView.findViewById(R.id.rate);
-            rate.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
-            oc = itemView.findViewById(R.id.oc);
-            oc.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
             bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -104,11 +103,23 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             });
         }
 
+        /**
+         * You should call this method after boxBar initialization, else you get NullPointerException
+         * @param active
+         */
+        public void setActive(boolean active) {
+            if (reviewItem != null) {
+                reviewItem.setChecked(checkBox.isChecked());
+            }
+            boxBar.setVisibility(active ? View.VISIBLE : View.GONE);
+        }
+
         public void update(ReviewItem reviewItem) {
             this.reviewItem = reviewItem;
             criterionName.setText(reviewItem.getName());
             rate.setText(String.valueOf(reviewItem.getValue()));
             checkBox.setChecked(reviewItem.isChecked());
+            setActive(reviewItem.isChecked());
             bar.setMax(reviewItem.getMaxValue() - reviewItem.getMinValue());
 
         }
