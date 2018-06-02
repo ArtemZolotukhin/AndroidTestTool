@@ -75,23 +75,23 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             criterionName.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
             bar = itemView.findViewById(R.id.param_bar);
             checkBox = itemView.findViewById(R.id.param_check);
+            checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
+                if (reviewItem != null) {
+                    reviewItem.setChecked(checkBox.isChecked());
+                }
+            });
             rate = itemView.findViewById(R.id.rate);
             rate.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
             oc = itemView.findViewById(R.id.oc);
             oc.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
-        }
-
-        public void update(ReviewItem reviewItem) {
-            this.reviewItem = reviewItem;
-            criterionName.setText(reviewItem.getName());
-            rate.setText(String.valueOf(reviewItem.getValue()));
-            bar.setMax(reviewItem.getMaxValue() - reviewItem.getMinValue());
             bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    int newValue = seekBar.getProgress() + reviewItem.getMinValue();
-                    ReviewViewHolder.this.reviewItem.setValue(newValue);
-                    rate.setText(String.valueOf(newValue));
+                    if (reviewItem != null) {
+                        int newValue = seekBar.getProgress() + reviewItem.getMinValue();
+                        ReviewViewHolder.this.reviewItem.setValue(newValue);
+                        rate.setText(String.valueOf(newValue));
+                    }
                 }
 
                 @Override
@@ -102,6 +102,15 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
                 public void onStopTrackingTouch(SeekBar seekBar) {
                 }
             });
+        }
+
+        public void update(ReviewItem reviewItem) {
+            this.reviewItem = reviewItem;
+            criterionName.setText(reviewItem.getName());
+            rate.setText(String.valueOf(reviewItem.getValue()));
+            checkBox.setChecked(reviewItem.isChecked());
+            bar.setMax(reviewItem.getMaxValue() - reviewItem.getMinValue());
+
         }
     }
 }

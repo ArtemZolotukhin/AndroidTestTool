@@ -27,7 +27,9 @@ public class ReviewToReviewFormConverterImpl implements ReviewToReviewFormConver
         reviewForm.setReview(review.getMessage());
         Set<CriterionForm> criterionForms = new HashSet<>();
         for (ReviewItem i : review.getReviewItemSet()) {
-            criterionForms.add(reviewItemToCriterionForm(i));
+            if (i.isChecked()) {
+                criterionForms.add(reviewItemToCriterionForm(i));
+            }
         }
         reviewForm.setAppId(TestToolApplication.getAppId());
         return reviewForm;

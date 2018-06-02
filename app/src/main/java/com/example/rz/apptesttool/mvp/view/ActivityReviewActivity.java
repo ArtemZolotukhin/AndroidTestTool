@@ -53,7 +53,9 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         etReview = findViewById(R.id.et_review);
 
         mSendButton.setOnClickListener(view -> {
-
+            if (presenter  != null) {
+                presenter.onSendClick();
+            }
         });
 
 

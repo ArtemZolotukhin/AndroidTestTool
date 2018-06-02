@@ -16,7 +16,18 @@ public class ReviewItem {
 
     private int maxValue;
 
+    private boolean checked;
+
     public ReviewItem() {
+    }
+
+    public ReviewItem(int id, int value, String name, int minValue, int maxValue, boolean checked) {
+        this.id = id;
+        this.value = value;
+        this.name = name;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.checked = checked;
     }
 
     public ReviewItem(int id, int value) {
@@ -77,5 +88,13 @@ public class ReviewItem {
     public ReviewItem setValue(int value) {
         this.value = value;
         return this;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }
