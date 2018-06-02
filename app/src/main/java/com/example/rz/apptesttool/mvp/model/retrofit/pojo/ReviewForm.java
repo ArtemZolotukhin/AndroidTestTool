@@ -32,6 +32,7 @@ public class ReviewForm {
     }
 
     public ReviewForm(String appId, String displayName, String review, Set<CriterionForm> criterions) {
+        //TODO DEVICE ID!!!!
         this.appId = appId;
         this.displayName = displayName;
         this.review = review;
@@ -72,5 +73,15 @@ public class ReviewForm {
     public ReviewForm setCriterions(Set<CriterionForm> criterions) {
         this.criterions = criterions;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "ReviewForm{" +
+                "appId='" + appId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", review='" + review + '\'' +
+                ", criterions=" + criterions +
+                '}';
     }
 }

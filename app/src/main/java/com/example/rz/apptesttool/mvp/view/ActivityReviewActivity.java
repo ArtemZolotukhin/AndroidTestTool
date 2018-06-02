@@ -33,24 +33,35 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     public static final String INTENT_PARAM_ACTIVITY_CLASS_NAME = "TestTool:activity_class_name";
     public static final String TAG_FRAGMENT_OBJECT_HOLDER = FragmentObjectHolder.class.getName();
 
+    public static final String PARAM_IS_ERROR = ActivityReviewActivity.class.getClass().getName() + ":is_error";
+    public static final String PARAM_REVIEW = ActivityReviewActivity.class.getClass().getName() + ":review";
+    public static final String PARAM_IS_LOADING = ActivityReviewActivity.class.getClass().getName() + ":is_loading";
+
     private ActivityReviewPresenter presenter;
     private RecyclerView recyclerView;
     private ReviewAdapter reviewAdapter;
     private ScrollView scrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Context context = this;
     private Button mSendButton;
     private Button mCancelButton;
+    private View boxSend;
+    private View vError;
+    private boolean isError;
     private EditText etReview;
+    private boolean isLoading;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
+        isError = false;
+        isLoading = false;
         mSendButton = findViewById(R.id.btn_confirm);
         mCancelButton = findViewById(R.id.btn_cancel);
         etReview = findViewById(R.id.et_review);
+        vError = findViewById(R.id.tv_error);
+        boxSend = findViewById(R.id.box_send);
 
         mSendButton.setOnClickListener(view -> {
             if (presenter  != null) {
@@ -58,34 +69,58 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
             }
         });
 
-
         swipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(this);
         scrollView = findViewById(R.id.box_criteries);
         recyclerView = findViewById(R.id.rv_criterions);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        reviewAdapter = new ReviewAdapter(context);
+        reviewAdapter = new ReviewAdapter(this);
         recyclerView.setAdapter(reviewAdapter);
 
         ( (TextView) findViewById(R.id.tv_activity_name)).setText(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
-        ((TextView) findViewById(R.id.tv_activity_name)).setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Light.ttf"));
+        ((TextView) findViewById(R.id.tv_activity_name)).setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Light.ttf"));
 
         findViewById(R.id.btn_cancel).setOnClickListener(view -> {
             presenter.onCloseClick();
         });
 
         presenter = getPresenter();
+
+        loadState(savedInstanceState);
     }
+
+    private void loadState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            this.isError = savedInstanceState.getBoolean(PARAM_IS_ERROR, false);
+            this.isLoading = savedInstanceState.getBoolean(PARAM_IS_LOADING);
+        }
+        setLoading(isLoading);
+        setIsError(isError);
+        Review review = (Review) presenter.getFromUglyStorage(PARAM_REVIEW);
+        if (review != null) {
+            CollectionUtils collectionUtils = new CollectionUtils();
+            reviewAdapter.setItems(collectionUtils.toList(review.getReviewItemSet()));
+        }
+    }
+    private void saveState(Bundle outState) {
+        outState.putBoolean(PARAM_IS_ERROR, isError);
+        outState.putBoolean(PARAM_IS_LOADING, isLoading);
+        getPresenter().putToUglyStorage(PARAM_REVIEW, getReview());
+    }
+
 
     private ActivityReviewPresenter getPresenter() {
         if (presenter != null) {
+            presenter.setView(this);
             return presenter;
         }
         FragmentObjectHolder<ActivityReviewPresenter> fragmentObjectHolder = getFragmentObjectHolder();
         presenter = fragmentObjectHolder.getContent();
         if (presenter == null) {
             presenter = new ActivityReviewPresenter(this);
+        } else {
+            presenter.setView(this);
         }
         fragmentObjectHolder.setContent(presenter);
         return presenter;
@@ -104,6 +139,12 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveState(outState);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         getPresenter().setView(null);
@@ -116,6 +157,11 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     @Override
     public void setLoading(boolean isLoading) {
+        if (isLoading) {
+            setIsError(false);
+        }
+        this.isLoading = isLoading;
+        swipeRefreshLayout.setEnabled(isLoading);
         swipeRefreshLayout.setRefreshing(isLoading);
         scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
     }
@@ -125,7 +171,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         Set<ReviewItem> reviewItemList = toReviewItemSet(criterionSet);
         CollectionUtils collectionUtils = new CollectionUtils();
         updateCriterions(collectionUtils.toList(reviewItemList));
-        swipeRefreshLayout.setEnabled(false);
     }
 
     private void updateCriterions(List<ReviewItem> items) {
@@ -163,12 +208,28 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     @Override
     public void showError(int errorCode) {
-        //TODO normal error
-        Toast.makeText(this, R.string.error, Toast.LENGTH_LONG).show();
+        switch (errorCode) {
+            case ERROR_CODE_CRITERIONS_LOAD:
+                setIsError(true);
+                break;
+            case ERROR_CODE_SEND:
+                Toast.makeText(this, R.string.error_send, Toast.LENGTH_LONG).show();
+                break;
+
+        }
     }
 
     @Override
     public void onRefresh() {
         presenter.loadCriterions();
+    }
+
+    public void setIsError(boolean isError) {
+        if (isError) {
+            swipeRefreshLayout.setEnabled(true);
+        }
+        this.isError = isError;
+        boxSend.setVisibility(isError ? View.GONE : View.VISIBLE);
+        vError.setVisibility(isError ? View.VISIBLE : View.GONE);
     }
 }

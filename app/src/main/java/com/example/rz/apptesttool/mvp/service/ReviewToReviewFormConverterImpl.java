@@ -1,5 +1,7 @@
 package com.example.rz.apptesttool.mvp.service;
 
+import android.util.Log;
+
 import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.Review;
 import com.example.rz.apptesttool.mvp.model.ReviewItem;
@@ -15,11 +17,16 @@ import java.util.Set;
 
 public class ReviewToReviewFormConverterImpl implements ReviewToReviewFormConverter {
 
+    private String appId;
+
+    public ReviewToReviewFormConverterImpl(String appId) {
+        this.appId = appId;
+    }
 
     @Override
     public ReviewForm convert(Review review) {
-        //TODO appId
         ReviewForm reviewForm = new ReviewForm();
+        reviewForm.setAppId(appId);
         if (review == null) {
             return reviewForm;
         }
@@ -31,7 +38,8 @@ public class ReviewToReviewFormConverterImpl implements ReviewToReviewFormConver
                 criterionForms.add(reviewItemToCriterionForm(i));
             }
         }
-        reviewForm.setAppId(TestToolApplication.getAppId());
+        reviewForm.setCriterions(criterionForms);
+        Log.d("AAAAAAAAAAAAA", reviewForm.toString());
         return reviewForm;
     }
 

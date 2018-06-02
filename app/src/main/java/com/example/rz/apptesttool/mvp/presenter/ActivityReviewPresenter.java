@@ -29,25 +29,28 @@ public class ActivityReviewPresenter extends AbstractPresenter {
         }
         this.view = view;
         // TODO may be Dagger 2
-        this.reviewService = new ReviewServiceImpl(TestToolApplication.getBaseUrl());
+        this.reviewService = new ReviewServiceImpl(TestToolApplication.getBaseUrl(),
+                TestToolApplication.getAppId());
         loadCriterions();
     }
 
     public void loadCriterions() {
-        this.view.setLoading(true);
-        reviewService.getCriteries(criterionsResponse -> {
-            Set<Criterion> criterionSet = null;
-            if (criterionsResponse.isSuccessfull()) {
-                criterionSet = criterionsResponse.getValue();
-                if (criterionSet != null) {
-                    getView().updateCriterions(criterionSet);
+        if (getView() != null) {
+            getView().setLoading(true);
+            reviewService.getCriteries(criterionsResponse -> {
+                Set<Criterion> criterionSet = null;
+                if (criterionsResponse.isSuccessfull()) {
+                    criterionSet = criterionsResponse.getValue();
+                    if (criterionSet != null) {
+                        getView().updateCriterions(criterionSet);
+                    }
+                } else {
+                    Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
+                    getView().showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                 }
-            } else {
-                Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
-                getView().showError(ActivityReviewView.ERROR_CODE_LOAD);
-            }
-            getView().setLoading(false);
-        });
+                getView().setLoading(false);
+            });
+        }
     }
 
     public void onSendClick() {
@@ -58,7 +61,7 @@ public class ActivityReviewPresenter extends AbstractPresenter {
                 view.close();
             } else {
                 getView().setLoading(false);
-                view.showError(ActivityReviewView.ERROR_CODE_LOAD);
+                view.showError(ActivityReviewView.ERROR_CODE_SEND);
             }
         });
     }

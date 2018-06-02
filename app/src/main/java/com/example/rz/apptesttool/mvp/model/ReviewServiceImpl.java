@@ -27,14 +27,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ReviewToReviewFormConverter reviewToReviewFormConverter;
 
-    public ReviewServiceImpl(String baseUrl) {
+    public ReviewServiceImpl(String baseUrl, String appId) {
         retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         reviewServ = retrofit.create(ReviewServ.class);
-        reviewToReviewFormConverter = new ReviewToReviewFormConverterImpl();
+        reviewToReviewFormConverter = new ReviewToReviewFormConverterImpl(appId);
     }
 
     @Override

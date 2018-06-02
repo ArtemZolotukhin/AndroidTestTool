@@ -49,20 +49,29 @@
                     android:id="@+id/rv_criterions"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/tv_activity_name"
-                    tools:listitem="@layout/item_criterion" />
+                    android:layout_below="@+id/tv_activity_name"/>
+                    <!--tools:listitem="@layout/item_criterion" />-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textColor="#849BAE"
+                    android:id="@+id/tv_error"
+                    android:visibility="gone"
+                    android:text="@string/error_swipe_to_refresh"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/box_send">
 
                     <EditText
                         android:id="@+id/et_review"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/common_margin"
                         android:backgroundTint="#1DBAC5"
-                        android:hint="Ваш комментарий..."
+                        android:hint="@string/comment_hint"
                         android:imeOptions="actionDone"
                         android:inputType="textMultiLine|textFilter|textVisiblePassword|textNoSuggestions"
                         android:maxLength="200"
@@ -72,16 +81,16 @@
                         android:textColorHint="#849BAE"
                         android:textCursorDrawable="@null" />
 
+
+
                     <LinearLayout
                         android:id="@+id/ll_button_box"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
+                        android:layout_below="@id/et_review"
                         android:layout_marginBottom="20dp"
                         android:orientation="horizontal"
-                        android:weightSum="2"
-
-                        >
+                        android:weightSum="2">
 
                         <Button
                             android:id="@+id/btn_cancel"
@@ -90,19 +99,17 @@
                             android:layout_marginEnd="10dp"
                             android:layout_marginStart="10dp"
                             android:layout_weight="1"
-                            android:background="#08C3CC"
-                            android:text="@string/cancel"
-                            android:textAllCaps="false" />
+                            style="@style/UxButton"
+                            android:text="@string/cancel"/>
 
                         <Button
                             android:id="@+id/btn_confirm"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="10dp"
+                            android:layout_marginEnd="@dimen/common_margin"
                             android:layout_weight="1"
-                            android:background="#08C3CC"
-                            android:text="@string/confirm"
-                            android:textAllCaps="false" />
+                            style="@style/UxButton"
+                            android:text="@string/confirm"/>
                     </LinearLayout>
 
                 </RelativeLayout>

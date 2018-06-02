@@ -11,7 +11,8 @@ import java.util.Set;
 
 public interface ActivityReviewView {
 
-    int ERROR_CODE_LOAD = 1;
+    int ERROR_CODE_CRITERIONS_LOAD = 1;
+    int ERROR_CODE_SEND = 2;
 
     void close();
 
