@@ -20,6 +20,7 @@ import com.example.rz.apptesttool.mvp.model.TouchInfo;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewActivity;
 import com.example.rz.apptesttool.view.MoveButton;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
@@ -154,7 +155,8 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
                 }
 
                 Log.d(tag, event + ": " + motionEvent.getRawX() + " " + motionEvent.getRawY());
-
+                TouchInfo touchInfo = new TouchInfo(motionEvent.getRawX(), motionEvent.getRawY(), activity.getClass().getName());
+                statisticRepository.put(touchInfo);
                 return false;
             });
             btn.setOnClickListener(view -> {
