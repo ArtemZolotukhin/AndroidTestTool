@@ -35,7 +35,7 @@ public class TouchServiceImpl implements TouchService {
             if (stringIntegerResponse.isSuccessfull()) {
                 if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
                     String deviceId = stringIntegerResponse.getValue();
-                    touchServ.deviceIndoSend(getForm(touches, deviceId))
+                    touchServ.send(getForm(touches, deviceId))
                             .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(sendTouchResult -> {

@@ -14,5 +14,5 @@ import retrofit2.http.POST;
 public interface TouchServ {
 
     @POST("/touch_map")
-    Observable<SendTouchResult> deviceIndoSend(@Body SendTouchesForm form);
+    Observable<SendTouchResult> send(@Body SendTouchesForm form);
 }
