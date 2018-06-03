@@ -1,5 +1,8 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 
 /**
@@ -8,10 +11,17 @@ import io.realm.RealmObject;
 
 public class TouchInfo extends RealmObject {
 
+
+    @SerializedName("x")
+    @Expose
     private float x;
 
+    @SerializedName("y")
+    @Expose
     private float y;
 
+    @SerializedName("dn")
+    @Expose
     private String activity;
 
     public TouchInfo() {

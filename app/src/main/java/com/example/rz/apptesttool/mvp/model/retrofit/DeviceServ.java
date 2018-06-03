@@ -12,6 +12,6 @@ import retrofit2.http.POST;
  */
 
 public interface DeviceServ {
-    @POST("/review")
+    @POST("/device")
     Observable<SendDeviceInfoResponse> deviceIndoSend(@Body SendDeviceInfoForm sendDeviceInfoForm);
 }
