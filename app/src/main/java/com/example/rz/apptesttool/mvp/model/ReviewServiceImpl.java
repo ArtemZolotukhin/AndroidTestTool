@@ -1,6 +1,7 @@
 package com.example.rz.apptesttool.mvp.model;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.providers.DeviceIdServiceProvider;
@@ -22,6 +23,8 @@ import retrofit2.Retrofit;
  */
 
 public class ReviewServiceImpl implements ReviewService {
+
+    public static final String LOG_TAG = "ReviewService";
 
     private Retrofit retrofit;
 
@@ -58,13 +61,17 @@ public class ReviewServiceImpl implements ReviewService {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(reviewResponse -> {
-                    if (reviewResponse.getCode() == 0) {
+                    int code = reviewResponse.getCode();
+                    if (code == 0) {
                         callback.call(Response.success(null));
                     } else {
+                        Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
                         //TODO normal error code
                         callback.call(Response.failure(404));
                     }
                 }, throwable -> {
+                    Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName()
+                            + " " + throwable.getMessage());
                     //TODO normal error code
                     callback.call(Response.failure(1));
                 });
