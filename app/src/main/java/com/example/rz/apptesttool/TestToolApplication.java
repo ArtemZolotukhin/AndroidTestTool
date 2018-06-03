@@ -1,6 +1,7 @@
 package com.example.rz.apptesttool;
 
 import android.app.Application;
+import android.content.Context;
 import android.view.WindowManager;
 
 /**
@@ -16,6 +17,8 @@ public class TestToolApplication extends Application {
     private static String baseUrl = "";
 
     private static String appId = "0";
+
+    private static Context mContext;
 
     public static String getBaseUrl() {
         return baseUrl;
@@ -36,6 +39,7 @@ public class TestToolApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        mContext = this;
         activityLifecycleCallbacks = new TestToolActivityLifecycleCallbacks(this);
     }
 
@@ -43,6 +47,10 @@ public class TestToolApplication extends Application {
     public void onTerminate() {
         super.onTerminate();
         unregisterActivityLifecycleCallbacks(activityLifecycleCallbacks);
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
 
     public ActivityLifecycleCallbacks getActivityLifecycleCallbacks() {

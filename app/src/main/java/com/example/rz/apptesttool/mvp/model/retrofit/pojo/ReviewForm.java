@@ -15,6 +15,10 @@ public class ReviewForm {
     @Expose
     private String appId;
 
+    @SerializedName("device_id")
+    @Expose
+    private String deviceId;
+
     @SerializedName("display_name")
     @Expose
     private String displayName;
@@ -31,9 +35,9 @@ public class ReviewForm {
     public ReviewForm() {
     }
 
-    public ReviewForm(String appId, String displayName, String review, Set<CriterionForm> criterions) {
-        //TODO DEVICE ID!!!!
+    public ReviewForm(String appId, String deviceId, String displayName, String review, Set<CriterionForm> criterions) {
         this.appId = appId;
+        this.deviceId = deviceId;
         this.displayName = displayName;
         this.review = review;
         this.criterions = criterions;
@@ -64,6 +68,14 @@ public class ReviewForm {
     public ReviewForm setReview(String review) {
         this.review = review;
         return this;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 
     public Set<CriterionForm> getCriterions() {

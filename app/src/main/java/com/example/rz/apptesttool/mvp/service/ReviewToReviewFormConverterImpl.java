@@ -24,9 +24,10 @@ public class ReviewToReviewFormConverterImpl implements ReviewToReviewFormConver
     }
 
     @Override
-    public ReviewForm convert(Review review) {
+    public ReviewForm convert(Review review, String deviceId) {
         ReviewForm reviewForm = new ReviewForm();
         reviewForm.setAppId(appId);
+        reviewForm.setDeviceId(deviceId);
         if (review == null) {
             return reviewForm;
         }

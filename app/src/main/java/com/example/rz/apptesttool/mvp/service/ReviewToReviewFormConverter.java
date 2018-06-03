@@ -9,6 +9,6 @@ import com.example.rz.apptesttool.mvp.model.retrofit.pojo.ReviewForm;
 
 public interface ReviewToReviewFormConverter {
 
-    ReviewForm convert(Review review);
+    ReviewForm convert(Review review, String deviceId);
 
 }

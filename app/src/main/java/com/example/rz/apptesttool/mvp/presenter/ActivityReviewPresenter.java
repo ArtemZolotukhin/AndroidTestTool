@@ -7,6 +7,7 @@ import com.example.rz.apptesttool.mvp.model.Criterion;
 import com.example.rz.apptesttool.mvp.model.Review;
 import com.example.rz.apptesttool.mvp.model.ReviewService;
 import com.example.rz.apptesttool.mvp.model.ReviewServiceImpl;
+import com.example.rz.apptesttool.mvp.model.providers.ReviewServiceProvider;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewView;
 
 import java.util.Set;
@@ -29,8 +30,7 @@ public class ActivityReviewPresenter extends AbstractPresenter {
         }
         this.view = view;
         // TODO may be Dagger 2
-        this.reviewService = new ReviewServiceImpl(TestToolApplication.getBaseUrl(),
-                TestToolApplication.getAppId());
+        this.reviewService = ReviewServiceProvider.get();
         loadCriterions();
     }
 
@@ -38,19 +38,25 @@ public class ActivityReviewPresenter extends AbstractPresenter {
         if (getView() != null) {
             getView().setLoading(true);
             reviewService.getCriteries(criterionsResponse -> {
+                getView().setLoading(false);
                 Set<Criterion> criterionSet = null;
                 if (criterionsResponse.isSuccessfull()) {
                     criterionSet = criterionsResponse.getValue();
                     if (criterionSet != null) {
                         getView().updateCriterions(criterionSet);
+                    } else {
+                        showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                     }
                 } else {
                     Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
-                    getView().showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
+                    showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                 }
-                getView().setLoading(false);
             });
         }
+    }
+
+    private void showError(int code) {
+        getView().showError(code);
     }
 
     public void onSendClick() {

@@ -1,7 +1,6 @@
 package com.example.rz.apptesttool.mvp.view;
 
 import android.app.FragmentManager;
-import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;

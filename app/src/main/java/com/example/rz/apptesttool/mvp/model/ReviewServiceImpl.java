@@ -1,6 +1,10 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import android.content.Context;
+
 import com.example.rz.apptesttool.TestToolApplication;
+import com.example.rz.apptesttool.mvp.model.providers.DeviceIdServiceProvider;
+import com.example.rz.apptesttool.mvp.model.providers.RetrofitProvider;
 import com.example.rz.apptesttool.mvp.model.retrofit.ReviewServ;
 import com.example.rz.apptesttool.mvp.model.retrofit.pojo.ReviewForm;
 import com.example.rz.apptesttool.mvp.service.ReviewToReviewFormConverter;
@@ -12,8 +16,6 @@ import java.util.Set;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by rz on 4/11/18.
@@ -27,19 +29,31 @@ public class ReviewServiceImpl implements ReviewService {
 
     private ReviewToReviewFormConverter reviewToReviewFormConverter;
 
+    private DeviceIdService deviceIdService;
+
     public ReviewServiceImpl(String baseUrl, String appId) {
-        retrofit = new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        retrofit = RetrofitProvider.get(baseUrl);
         reviewServ = retrofit.create(ReviewServ.class);
         reviewToReviewFormConverter = new ReviewToReviewFormConverterImpl(appId);
+        deviceIdService = DeviceIdServiceProvider.get();
     }
 
     @Override
     public void sendReview(Review review, Callback<Response<Void, Integer>> callback) {
-        ReviewForm reviewForm = reviewToReviewFormConverter.convert(review);
+        deviceIdService.getDeviceId(stringIntegerResponse -> {
+            if (stringIntegerResponse.isSuccessfull()) {
+                if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
+                    sendReview(review, callback, stringIntegerResponse.getValue());
+                    return;
+                }
+            }
+            //TODO normal error
+            callback.call(Response.failure(1));
+        });
+    }
+
+    private void sendReview(Review review, Callback<Response<Void, Integer>> callback, String deviceId) {
+        ReviewForm reviewForm = reviewToReviewFormConverter.convert(review, deviceId);
         reviewServ.reviewSend(reviewForm)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

@@ -20,9 +20,16 @@ public class Response<V, E> {
     public static <V, E> Response<V, E> success(V v) {
         return new Response<>().setSuccessfull(true).setValue(v);
     }
+    public static <V, E> Response<V, E> success(V v, E e) {
+        return new Response<>().setSuccessfull(true).setValue(v).setError(e);
+    }
 
     public static <V, E> Response<V, E> failure(E e) {
         return new Response<>().setSuccessfull(false).setError(e);
+    }
+
+    public static <V, E> Response<V, E> failure(E e, V v) {
+        return new Response<>().setSuccessfull(false).setError(e).setValue(v);
     }
 
     public boolean isSuccessfull() {
