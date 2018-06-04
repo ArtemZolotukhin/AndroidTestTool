@@ -182,7 +182,10 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     public void onActivityPaused(Activity activity) {
         StatisticRepositoryImpl.getInstance(context).updateTimeInfo(currentTime + System.currentTimeMillis() - time1, timeInfo);
         TimeService timeService = TimeServiceProvider.get();
-        timeService.send(timeInfo, voidIntegerResponse -> {
+        TimeInfo timeInfo1 = new TimeInfo();
+        timeInfo1.setTime(System.currentTimeMillis() - time1);
+        timeInfo1.setActivity(activity.getClass().getName());
+        timeService.send(timeInfo1, voidIntegerResponse -> {
             if(voidIntegerResponse.isSuccessfull()) {
                 //чё-нить надо
             }
@@ -202,9 +205,12 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     @Override
     public void onActivityDestroyed(Activity activity) {
         TimeService timeService = TimeServiceProvider.get();
-        timeService.send(timeInfo, voidIntegerResponse -> {
+        TimeInfo timeInfo1 = new TimeInfo();
+        timeInfo1.setTime(System.currentTimeMillis() - time1);
+        timeInfo1.setActivity(activity.getClass().getName());
+        timeService.send(timeInfo1, voidIntegerResponse -> {
             if(voidIntegerResponse.isSuccessfull()) {
-                System.out.println("НОРМ");
+                //чё-нить надо
             }
         });
     }
