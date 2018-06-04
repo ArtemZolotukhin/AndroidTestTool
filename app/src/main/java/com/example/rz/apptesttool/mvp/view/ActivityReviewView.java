@@ -14,6 +14,8 @@ public interface ActivityReviewView {
     int ERROR_CODE_CRITERIONS_LOAD = 1;
     int ERROR_CODE_SEND = 2;
 
+    int MESSAGE_SUCCESS = 0;
+
     void close();
 
     void setLoading(boolean isLoading);
@@ -23,4 +25,11 @@ public interface ActivityReviewView {
     Review getReview();
 
     void showError(int errorCode);
+
+    /**
+     *
+     * @param messageCode code of message. See integer constants with prefix MESSAGE_ in {@link ActivityReviewView}
+     * @param isCloseAfter when true, view will closed after message show
+     */
+    void showMessage(int messageCode, boolean isCloseAfter);
 }

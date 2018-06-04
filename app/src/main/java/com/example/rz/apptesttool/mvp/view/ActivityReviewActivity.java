@@ -219,6 +219,17 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     }
 
     @Override
+    public void showMessage(int messageCode, boolean isCloseAfter) {
+        switch (messageCode) {
+            case MESSAGE_SUCCESS:
+                Toast.makeText(this, R.string.success, Toast.LENGTH_LONG).show();
+        }
+        if (isCloseAfter) {
+            close();
+        }
+    }
+
+    @Override
     public void onRefresh() {
         presenter.loadCriterions();
     }

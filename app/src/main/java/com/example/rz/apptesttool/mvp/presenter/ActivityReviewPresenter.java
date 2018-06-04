@@ -38,18 +38,20 @@ public class ActivityReviewPresenter extends AbstractPresenter {
         if (getView() != null) {
             getView().setLoading(true);
             reviewService.getCriteries(criterionsResponse -> {
-                getView().setLoading(false);
-                Set<Criterion> criterionSet = null;
-                if (criterionsResponse.isSuccessfull()) {
-                    criterionSet = criterionsResponse.getValue();
-                    if (criterionSet != null) {
-                        getView().updateCriterions(criterionSet);
+                if (getView() != null) {
+                    getView().setLoading(false);
+                    Set<Criterion> criterionSet = null;
+                    if (criterionsResponse.isSuccessfull()) {
+                        criterionSet = criterionsResponse.getValue();
+                        if (criterionSet != null) {
+                            getView().updateCriterions(criterionSet);
+                        } else {
+                            showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
+                        }
                     } else {
+                        Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
                         showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                     }
-                } else {
-                    Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
-                    showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                 }
             });
         }
@@ -63,11 +65,13 @@ public class ActivityReviewPresenter extends AbstractPresenter {
         Review review = view.getReview();
         getView().setLoading(true);
         reviewService.sendReview(review, voidIntegerResponse -> {
-            if (voidIntegerResponse.isSuccessfull()) {
-                view.close();
-            } else {
-                getView().setLoading(false);
-                view.showError(ActivityReviewView.ERROR_CODE_SEND);
+            if (view != null) {
+                if (voidIntegerResponse.isSuccessfull()) {
+                    view.showMessage(ActivityReviewView.MESSAGE_SUCCESS, true);
+                } else {
+                    getView().setLoading(false);
+                    view.showError(ActivityReviewView.ERROR_CODE_SEND);
+                }
             }
         });
     }
