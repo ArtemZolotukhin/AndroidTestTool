@@ -34,6 +34,8 @@ public class ReviewServiceImpl implements ReviewService {
 
     private DeviceIdService deviceIdService;
 
+    private Set<Criterion> cachedCriterions;
+
     public ReviewServiceImpl(String baseUrl, String appId) {
         retrofit = RetrofitProvider.get(baseUrl);
         reviewServ = retrofit.create(ReviewServ.class);
@@ -80,27 +82,40 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void getCriteries(Callback<Response<Set<Criterion>, Integer>> callback) {
-        //TODO Cache
-        CriteriesForm criteriesForm = getCriteriesForm();
-        reviewServ.categories(criteriesForm)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(criteriesResponse -> {
-                    if (criteriesResponse != null) {
-                        if (criteriesResponse.getCode() == 0) {
-                            Set<Criterion> criteria = new HashSet<>();
-                            criteria.addAll(criteriesResponse.getCriteries());
-                            callback.call(Response.success(criteria));
+        /* Check Cache */
+        if (checkCache()) {
+            callback.call(Response.success(cachedCriterions, 0));
+        } else {
+            CriteriesForm criteriesForm = getCriteriesForm();
+            reviewServ.categories(criteriesForm)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(criteriesResponse -> {
+                        if (criteriesResponse != null) {
+                            if (criteriesResponse.getCode() == 0) {
+                                Set<Criterion> criteria = new HashSet<>();
+                                criteria.addAll(criteriesResponse.getCriteries());
+                                cachedCriterions = criteria;
+                                callback.call(Response.success(criteria));
+                            } else {
+                                callback.call(Response.failure(criteriesResponse.getCode()));
+                            }
                         } else {
-                            callback.call(Response.failure(criteriesResponse.getCode()));
+                            callback.call(Response.failure(1));
                         }
-                    } else {
+                    }, throwable -> {
                         callback.call(Response.failure(1));
-                    }
-                }, throwable -> {
-                    callback.call(Response.failure(1));
-                });
+                    });
+        }
+    }
 
+    private boolean checkCache() {
+        if (cachedCriterions != null) {
+            if (cachedCriterions.size() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
