@@ -13,10 +13,14 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.example.rz.apptesttool.mvp.model.Callback;
+import com.example.rz.apptesttool.mvp.model.Response;
 import com.example.rz.apptesttool.mvp.model.StatisticRepository;
 import com.example.rz.apptesttool.mvp.model.StatisticRepositoryImpl;
 import com.example.rz.apptesttool.mvp.model.TimeInfo;
+import com.example.rz.apptesttool.mvp.model.TimeService;
 import com.example.rz.apptesttool.mvp.model.TouchInfo;
+import com.example.rz.apptesttool.mvp.model.providers.TimeServiceProvider;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewActivity;
 import com.example.rz.apptesttool.view.MoveButton;
 
@@ -177,6 +181,12 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     @Override
     public void onActivityPaused(Activity activity) {
         StatisticRepositoryImpl.getInstance(context).updateTimeInfo(currentTime + System.currentTimeMillis() - time1, timeInfo);
+        TimeService timeService = TimeServiceProvider.get();
+        timeService.send(timeInfo, voidIntegerResponse -> {
+            if(voidIntegerResponse.isSuccessfull()) {
+                //чё-нить надо
+            }
+        });
     }
 
     @Override
@@ -191,7 +201,12 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-
+        TimeService timeService = TimeServiceProvider.get();
+        timeService.send(timeInfo, voidIntegerResponse -> {
+            if(voidIntegerResponse.isSuccessfull()) {
+                System.out.println("НОРМ");
+            }
+        });
     }
 
     private Intent getOrCreateIntent(Activity activity) {
