@@ -1,6 +1,9 @@
 package com.example.rz.apptesttool.mvp.model;
 
 import android.content.Context;
+import android.widget.Toast;
+
+import com.example.rz.apptesttool.mvp.model.providers.TouchServiceProvider;
 
 import java.sql.Time;
 import java.util.ArrayList;
@@ -36,8 +39,33 @@ public class StatisticRepositoryImpl implements StatisticRepository {
         touchInfo1.setActivity(touchInfo.getActivity());
         mRealm.commitTransaction();
 
+
+        ArrayList<TouchInfo> list = (ArrayList<TouchInfo>) getAllTouchInfoByActivity(touchInfo.getActivity());
+        if(list.size()%10 == 0) {
+            mRealm.beginTransaction();
+            //Toast.makeText(context, list.size() + "10 касаний", Toast.LENGTH_SHORT).show();
+            TouchService service = TouchServiceProvider.get();
+            service.send(list, voidIntegerResponse -> {
+                if(voidIntegerResponse.isSuccessfull()){
+                    deleteAllTouchesByActivity(touchInfo.getActivity());
+                    //Toast.makeText(context, "10 касаний отправлены", Toast.LENGTH_SHORT).show();
+                }
+            });
+            mRealm.commitTransaction();
+        }
+
+
+
         //STUB
         return true;
+    }
+
+
+    public void deleteAllTouchesByActivity(String activity) {
+        mRealm.beginTransaction();
+        RealmResults<TouchInfo> tests = mRealm.where(TouchInfo.class).contains("activity", activity).findAll();
+        tests.deleteAllFromRealm();
+        mRealm.commitTransaction();
     }
 
     @Override
@@ -66,6 +94,16 @@ public class StatisticRepositoryImpl implements StatisticRepository {
         return infos;
         //STUB
     }
+
+
+    public Collection<TouchInfo> getAllTouchInfoByActivity(String activityName) {
+        Collection<TouchInfo> infos = new ArrayList<>();
+        RealmResults<TouchInfo> tests = mRealm.where(TouchInfo.class).contains("activity", activityName).findAll();
+        infos.addAll(tests);
+        return infos;
+        //STUB
+    }
+
 
     @Override
     public boolean removeAllTouchInfo() {

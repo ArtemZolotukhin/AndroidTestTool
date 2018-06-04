@@ -41,11 +41,14 @@ public class TouchServiceImpl implements TouchService {
                             .subscribe(sendTouchResult -> {
                                 if (sendTouchResult.getCode() == 0) {
                                     callback.call(Response.success(null, 0));
+
                                 } else {
                                     //TODO normal error codes
                                     callback.call(Response.failure(1));
+
                                 }
                             }, throwable -> {
+                                throwable.fillInStackTrace();
                                 callback.call(Response.failure(1));
                             });
                 } else {
