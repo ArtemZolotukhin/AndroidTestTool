@@ -1,5 +1,7 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import android.util.Log;
+
 import com.example.rz.apptesttool.mvp.model.providers.DeviceIdServiceProvider;
 import com.example.rz.apptesttool.mvp.model.providers.RetrofitProvider;
 import com.example.rz.apptesttool.mvp.model.retrofit.TouchServ;
@@ -15,6 +17,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class TouchServiceImpl implements TouchService {
+
+    public static final String LOG_TAG = "TouchService";
 
     private String appId;
 
@@ -35,19 +39,7 @@ public class TouchServiceImpl implements TouchService {
             if (stringIntegerResponse.isSuccessfull()) {
                 if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
                     String deviceId = stringIntegerResponse.getValue();
-                    touchServ.send(getForm(touches, deviceId))
-                            .subscribeOn(Schedulers.computation())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(sendTouchResult -> {
-                                if (sendTouchResult.getCode() == 0) {
-                                    callback.call(Response.success(null, 0));
-                                } else {
-                                    //TODO normal error codes
-                                    callback.call(Response.failure(1));
-                                }
-                            }, throwable -> {
-                                callback.call(Response.failure(1));
-                            });
+                    send(touches, callback, deviceId);
                 } else {
                     callback.call(Response.failure(1));
                 }
@@ -57,6 +49,26 @@ public class TouchServiceImpl implements TouchService {
 
         });
 
+    }
+
+    public void send(List<TouchInfo> touches, Callback<Response<Void, Integer>> callback, String deviceId) {
+        SendTouchesForm form = getForm(touches, deviceId);
+        Log.d(LOG_TAG, "info: form to send: " + form.toString());
+        touchServ.send(form)
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(sendTouchResult -> {
+                    int code = sendTouchResult.getCode();
+                    if (code == 0) {
+                        callback.call(Response.success(null, 0));
+                    } else {
+                        Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
+                        callback.call(Response.failure(1));
+                    }
+                }, throwable -> {
+                    Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName());
+                    callback.call(Response.failure(1));
+                });
     }
 
     private SendTouchesForm getForm(List<TouchInfo> touches, String deviceId) {
