@@ -57,6 +57,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private void sendReview(Review review, Callback<Response<Void, Integer>> callback, String deviceId) {
         ReviewForm reviewForm = reviewToReviewFormConverter.convert(review, deviceId);
+        Log.d(LOG_TAG, "info: form to send: " + reviewForm.toString());
         reviewServ.reviewSend(reviewForm)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())

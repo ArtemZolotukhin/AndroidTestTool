@@ -49,6 +49,7 @@ public class DeviceIdServiceImpl implements DeviceIdService {
     public void getDeviceId(Callback<Response<String, Integer>> callback) {
         if (this.cachedDeviceId == null) {
             SendDeviceInfoForm form = getSendDeviceInfoForm();
+            Log.d(LOG_TAG, "info: form to send: " + form.toString());
             deviceServ.deviceIndoSend(form)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
