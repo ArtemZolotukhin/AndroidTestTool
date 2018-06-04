@@ -91,6 +91,7 @@ public class ReviewForm {
     public String toString() {
         return "ReviewForm{" +
                 "appId='" + appId + '\'' +
+                ", deviceId='" + deviceId + '\'' +
                 ", displayName='" + displayName + '\'' +
                 ", review='" + review + '\'' +
                 ", criterions=" + criterions +

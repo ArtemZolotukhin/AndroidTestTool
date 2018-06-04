@@ -20,7 +20,7 @@ public class TouchInfo extends RealmObject {
     @Expose
     private float y;
 
-    @SerializedName("dn")
+    @SerializedName("display_name")
     @Expose
     private String activity;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 
 import com.example.rz.apptesttool.mvp.model.providers.RetrofitProvider;
 import com.example.rz.apptesttool.mvp.model.retrofit.DeviceServ;
@@ -20,6 +21,8 @@ import retrofit2.Retrofit;
  */
 
 public class DeviceIdServiceImpl implements DeviceIdService {
+
+    public static final String LOG_TAG = "DeviceIdService";
 
     public static final String PREFERENCES = "device_info";
     public static final String PARAM_DEVICE_UUID = "device_uuid";
@@ -46,19 +49,23 @@ public class DeviceIdServiceImpl implements DeviceIdService {
     public void getDeviceId(Callback<Response<String, Integer>> callback) {
         if (this.cachedDeviceId == null) {
             SendDeviceInfoForm form = getSendDeviceInfoForm();
+            Log.d(LOG_TAG, "info: form to send: " + form.toString());
             deviceServ.deviceIndoSend(form)
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(sendDeviceInfoResponse -> {
-                        if (sendDeviceInfoResponse.getCode() == 0) {
+                        int code = sendDeviceInfoResponse.getCode();
+                        if (code == 0) {
                             this.cachedDeviceId = sendDeviceInfoResponse.getDeviceId();
                             callback.call(Response.success(this.cachedDeviceId, 0));
                         } else {
                             //TODO normall error code
+                            Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
                             callback.call(Response.failure(1));
                         }
                     }, throwable -> {
-                        throwable.printStackTrace();
+                        Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName()
+                                + " " + throwable.getMessage());
                         //TODO normall error code
                         callback.call(Response.failure(1));
                     });
