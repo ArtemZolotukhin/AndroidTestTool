@@ -1,5 +1,7 @@
 package com.example.rz.apptesttool.mvp.model;
 
+import android.util.Log;
+
 import com.example.rz.apptesttool.mvp.model.providers.DeviceIdServiceProvider;
 import com.example.rz.apptesttool.mvp.model.providers.RetrofitProvider;
 import com.example.rz.apptesttool.mvp.model.retrofit.TimeServ;
@@ -13,6 +15,8 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class TimeServiceImpl implements TimeService {
+
+    public static final String LOG_TAG = "TimeService";
 
     private String baseUrl;
 
@@ -56,14 +60,18 @@ public class TimeServiceImpl implements TimeService {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(sendTimeResponse -> {
-                    if (sendTimeResponse.getCode() == 0) {
+                    int code = sendTimeResponse.getCode();
+                    if (code == 0) {
                         callback.call(Response.success(null, 0));
                     } else {
                         //TODO normal error codes
+                        Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
                         callback.call(Response.failure(1));
                     }
                 }, throwable -> {
                     //TODO normal error codes
+                    Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName()
+                            + " " + throwable.getMessage());
                     callback.call(Response.failure(1));
                 });
     }
