@@ -47,4 +47,13 @@ public class SendTouchesForm {
     public void setTouchMap(List<TouchInfo> touchMap) {
         this.touchMap = touchMap;
     }
+
+    @Override
+    public String toString() {
+        return "SendTouchesForm{" +
+                "appId='" + appId + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", touchMap=" + touchMap +
+                '}';
+    }
 }
