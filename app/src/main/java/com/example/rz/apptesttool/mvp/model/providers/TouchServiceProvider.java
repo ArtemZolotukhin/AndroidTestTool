@@ -11,8 +11,13 @@ import com.example.rz.apptesttool.mvp.model.retrofit.TouchServ;
 
 public class TouchServiceProvider {
 
+    private static TouchService touchService;
+
     public static TouchService get() {
-        return new TouchServiceImpl(TestToolApplication.getBaseUrl(), TestToolApplication.getAppId());
+        if (touchService == null) {
+            touchService = new TouchServiceImpl(TestToolApplication.getBaseUrl(), TestToolApplication.getAppId());
+        }
+        return touchService;
     }
 
 }
