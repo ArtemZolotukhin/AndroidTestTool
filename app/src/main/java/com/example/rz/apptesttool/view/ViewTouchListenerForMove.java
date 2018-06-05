@@ -2,10 +2,8 @@ package com.example.rz.apptesttool.view;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 
 public class ViewTouchListenerForMove implements View.OnTouchListener {
 
@@ -14,7 +12,7 @@ public class ViewTouchListenerForMove implements View.OnTouchListener {
     /**
      * in milliseconds
      */
-    public static final long DEFAULT_LONG_PRESS_TIMEOUT = 800;
+    public static final long DEFAULT_LONG_PRESS_TIMEOUT = 1200;
 
     private int lastAction;
 
