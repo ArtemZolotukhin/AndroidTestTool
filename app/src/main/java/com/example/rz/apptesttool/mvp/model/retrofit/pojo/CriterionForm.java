@@ -41,4 +41,12 @@ public class CriterionForm {
         this.value = value;
         return this;
     }
+
+    @Override
+    public String toString() {
+        return "CriterionForm{" +
+                "id=" + id +
+                ", value=" + value +
+                '}';
+    }
 }
