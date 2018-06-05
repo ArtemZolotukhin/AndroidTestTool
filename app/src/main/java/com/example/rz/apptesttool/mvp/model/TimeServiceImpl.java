@@ -56,7 +56,9 @@ public class TimeServiceImpl implements TimeService {
     }
 
     private void send(TimeInfo timeInfo, Callback<Response<Void, Integer>> callback, String deviceId) {
-        timeServ.send(getForm(timeInfo, deviceId))
+        TimeForm form = getForm(timeInfo, deviceId);
+        Log.d(LOG_TAG, "info: form to send: " + form.toString());
+        timeServ.send(form)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(sendTimeResponse -> {

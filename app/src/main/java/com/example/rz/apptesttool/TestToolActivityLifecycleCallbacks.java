@@ -1,5 +1,6 @@
 package com.example.rz.apptesttool;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -7,25 +8,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.example.rz.apptesttool.mvp.model.Callback;
-import com.example.rz.apptesttool.mvp.model.Response;
-import com.example.rz.apptesttool.mvp.model.StatisticRepository;
 import com.example.rz.apptesttool.mvp.model.StatisticRepositoryImpl;
 import com.example.rz.apptesttool.mvp.model.TimeInfo;
 import com.example.rz.apptesttool.mvp.model.TimeService;
 import com.example.rz.apptesttool.mvp.model.TouchInfo;
 import com.example.rz.apptesttool.mvp.model.providers.TimeServiceProvider;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewActivity;
-import com.example.rz.apptesttool.view.MoveButton;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
+import com.example.rz.apptesttool.view.ViewTouchListenerForMove;
 
 
 /**
@@ -43,9 +38,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     private Context context;
 
-    private boolean buttonIsMove;
-    private boolean buttonInFocus;
-
     private long time1;
     private TimeInfo timeInfo;
     private long currentTime;
@@ -55,7 +47,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             throw new NullPointerException("Context must be not null!");
         }
         this.context = context;
-        buttonIsMove = false;
     }
 
     @Override
@@ -73,6 +64,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onActivityResumed(Activity activity) {
         time1 = System.currentTimeMillis();
@@ -101,34 +93,9 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
 
-            Button btn = new Button(context);
-            btn.setText("X");
-            btn.setOnLongClickListener(view -> {
-                buttonIsMove = true;
-                return true;
-            });
-            //Я хочу умереть...
-            btn.setOnTouchListener((view, motionEvent) -> {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                           btn.setX(motionEvent.getRawX() - btn.getWidth() / 2);
-                            btn.setY(motionEvent.getRawY() - btn.getHeight() / 2);
-                            buttonIsMove = true;
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        if (buttonIsMove) {
-                            buttonIsMove = false;
-                            return true;
-                        } else {
-                            view.callOnClick();
-                            return false;
-                        }
-                    default:
-                        return false;
-                }
-            });
+            Button btn = (Button) LayoutInflater.from(context).inflate(R.layout.cool_button, null);
+
+            btn.setOnTouchListener(new ViewTouchListenerForMove(context));
 
             frameLayout.addView(btn, params);
             frameLayout.setOnTouchListener((view, motionEvent) -> {
@@ -170,6 +137,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             intent.putExtra(INTENT_IS_TEST_BUTTON_CREATED, true);
         }
     }
+
 
     private void startActivityReview(Activity activity) {
         Intent intent = new Intent(context, ActivityReviewActivity.class);
