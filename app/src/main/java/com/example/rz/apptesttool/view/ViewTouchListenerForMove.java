@@ -14,7 +14,7 @@ public class ViewTouchListenerForMove implements View.OnTouchListener {
     /**
      * in milliseconds
      */
-    public static final long DEFAULT_LONG_PRESS_TIMEOUT = 800;
+    public static final long DEFAULT_LONG_PRESS_TIMEOUT = 1200;
 
     private int lastAction;
 
