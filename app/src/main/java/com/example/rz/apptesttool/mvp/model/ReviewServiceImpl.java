@@ -46,14 +46,12 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public void sendReview(Review review, Callback<Response<Void, Integer>> callback) {
         deviceIdService.getDeviceId(stringIntegerResponse -> {
-            if (stringIntegerResponse.isSuccessfull()) {
-                if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
-                    sendReview(review, callback, stringIntegerResponse.getValue());
-                    return;
-                }
+            if (stringIntegerResponse.isSuccessfullAndValueNotNull()) {
+                sendReview(review, callback, stringIntegerResponse.getValue());
+            } else {
+                //TODO normal error code
+                callback.call(Response.failure(stringIntegerResponse.getError()));
             }
-            //TODO normal error
-            callback.call(Response.failure(1));
         });
     }
 
@@ -70,7 +68,7 @@ public class ReviewServiceImpl implements ReviewService {
                     } else {
                         Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
                         //TODO normal error code
-                        callback.call(Response.failure(404));
+                        callback.call(Response.failure(code));
                     }
                 }, throwable -> {
                     Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName()
@@ -91,19 +89,19 @@ public class ReviewServiceImpl implements ReviewService {
                     .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(criteriesResponse -> {
-                        if (criteriesResponse != null) {
-                            if (criteriesResponse.getCode() == 0) {
-                                Set<Criterion> criteria = new HashSet<>();
-                                criteria.addAll(criteriesResponse.getCriteries());
-                                cachedCriterions = criteria;
-                                callback.call(Response.success(criteria));
-                            } else {
-                                callback.call(Response.failure(criteriesResponse.getCode()));
-                            }
+                        int code = criteriesResponse.getCode();
+                        if (code == 0) {
+                            Set<Criterion> criteria = new HashSet<>();
+                            criteria.addAll(criteriesResponse.getCriteries());
+                            cachedCriterions = criteria;
+                            callback.call(Response.success(criteria));
                         } else {
-                            callback.call(Response.failure(1));
+                            Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
+                            callback.call(Response.failure(code));
                         }
                     }, throwable -> {
+                        Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName()
+                                + " " + throwable.getMessage());
                         callback.call(Response.failure(1));
                     });
         }

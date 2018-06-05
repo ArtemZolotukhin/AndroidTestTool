@@ -36,6 +36,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:textColor="#FFF"
+                    android:layout_margin="@dimen/common_margin"
                     android:textSize="25sp" />
 
                 <View

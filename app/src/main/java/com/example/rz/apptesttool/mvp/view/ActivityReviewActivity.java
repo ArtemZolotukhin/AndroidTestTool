@@ -34,7 +34,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
     public static final String PARAM_IS_ERROR = ActivityReviewActivity.class.getClass().getName() + ":is_error";
     public static final String PARAM_REVIEW = ActivityReviewActivity.class.getClass().getName() + ":review";
-    public static final String PARAM_IS_LOADING = ActivityReviewActivity.class.getClass().getName() + ":is_loading";
 
     private ActivityReviewPresenter presenter;
     private ReviewAdapter reviewAdapter;
@@ -44,7 +43,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     private View vError;
     private boolean isError;
     private EditText etReview;
-    private boolean isLoading;
 
 
     @Override
@@ -52,7 +50,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_review);
         isError = false;
-        isLoading = false;
         etReview = findViewById(R.id.et_review);
         vError = findViewById(R.id.tv_error);
         boxSend = findViewById(R.id.box_send);
@@ -72,7 +69,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         reviewAdapter = new ReviewAdapter(this);
         recyclerView.setAdapter(reviewAdapter);
 
-        ( (TextView) findViewById(R.id.tv_activity_name)).setText(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
+        ( (TextView) findViewById(R.id.tv_activity_name)).setText(getFormatedDisplayName());
         ((TextView) findViewById(R.id.tv_activity_name)).setTypeface(Typeface.createFromAsset(this.getAssets(), "fonts/Roboto-Light.ttf"));
 
         findViewById(R.id.btn_cancel).setOnClickListener(view -> {
@@ -81,15 +78,15 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
 
         presenter = getPresenter();
 
+        setLoading(presenter.isLoading());
+
         loadState(savedInstanceState);
     }
 
     private void loadState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             this.isError = savedInstanceState.getBoolean(PARAM_IS_ERROR, false);
-            this.isLoading = savedInstanceState.getBoolean(PARAM_IS_LOADING);
         }
-        setLoading(isLoading);
         setIsError(isError);
         Review review = (Review) presenter.getFromUglyStorage(PARAM_REVIEW);
         if (review != null) {
@@ -99,7 +96,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     }
     private void saveState(Bundle outState) {
         outState.putBoolean(PARAM_IS_ERROR, isError);
-        outState.putBoolean(PARAM_IS_LOADING, isLoading);
         getPresenter().putToUglyStorage(PARAM_REVIEW, getReview());
     }
 
@@ -132,6 +128,26 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         return fragmentObjectHolder;
     }
 
+    private String getDisplayName() {
+
+        return getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME);
+
+    }
+
+    private String getFormatedDisplayName() {
+        String fullString = getDisplayName();
+        if (fullString == null) {
+            fullString = "";
+        }
+
+        String[] raw = fullString.split("\\.");
+        if (raw.length > 0) {
+            return raw[raw.length - 1];
+        } else {
+            return "..unknown..";
+        }
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -154,7 +170,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         if (isLoading) {
             setIsError(false);
         }
-        this.isLoading = isLoading;
         swipeRefreshLayout.setEnabled(isLoading);
         swipeRefreshLayout.setRefreshing(isLoading);
         scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
@@ -192,8 +207,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
            return null;
         }
         Review review = new Review();
-        //TODO normal activity class name
-        review.setDisplayName(getIntent().getStringExtra(INTENT_PARAM_ACTIVITY_CLASS_NAME));
+        review.setDisplayName(getDisplayName());
         review.setMessage(etReview.getText().toString());
         CollectionUtils collectionUtils = new CollectionUtils();
         review.setReviewItemSet(collectionUtils.toSet(reviewAdapter.getReviewItems()));
@@ -209,7 +223,6 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
             case ERROR_CODE_SEND:
                 Toast.makeText(this, R.string.error_send, Toast.LENGTH_LONG).show();
                 break;
-
         }
     }
 

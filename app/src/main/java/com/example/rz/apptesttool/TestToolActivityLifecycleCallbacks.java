@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -28,6 +29,8 @@ import com.example.rz.apptesttool.view.ViewTouchListenerForMove;
  */
 
 public class TestToolActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+
+    public static final String LOG_TAG = "TTALC";
 
     public static final String INTENT_IS_TEST_BUTTON_CREATED = "TestTool:isTestButtonExists";
 
@@ -85,9 +88,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             FrameLayout.LayoutParams rootParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             frameLayout.setLayoutParams(rootParams);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+            FrameLayout.LayoutParams params = getFrameLayoutParamsForButton();
 
             Button btn = (Button) LayoutInflater.from(context).inflate(R.layout.cool_button, null);
 
@@ -96,6 +97,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
             frameLayout.addView(btn, params);
             frameLayout.setOnTouchListener((view, motionEvent) -> {
                 TouchInfo touchInfo = new TouchInfo(motionEvent.getRawX(), motionEvent.getRawY(), activity.getClass().getName());
+                Log.d(LOG_TAG, touchInfo.toString());
                 statisticRepository.put(touchInfo);
                 return false;
             });
@@ -168,7 +170,17 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
         }
     }
 
-
+    private FrameLayout.LayoutParams getFrameLayoutParamsForButton() {
+        /** in dpi. And yes, it is hardcode... But no, it is suckless program*/
+        float margin = 32.0f;
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        params.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        int rawMargin = Math.round(margin * displayMetrics.widthPixels / (float) displayMetrics.densityDpi);
+        params.setMargins(rawMargin, rawMargin, rawMargin, rawMargin);
+        return params;
+    }
 
 
 }
