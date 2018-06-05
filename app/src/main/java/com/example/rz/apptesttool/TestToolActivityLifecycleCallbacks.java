@@ -29,11 +29,8 @@ import com.example.rz.apptesttool.view.ViewTouchListenerForMove;
 
 public class TestToolActivityLifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
 
-    public static final String LOG_TAG = "TestToolDebug";
-
     public static final String INTENT_IS_TEST_BUTTON_CREATED = "TestTool:isTestButtonExists";
 
-    //TODO rewrite on annotation based... may be :)
     public static final String EXCLUDED_ACTIVITY = "com.example.rz.apptesttool.mvp.view.ActivityReviewActivity";
 
     private Context context;
@@ -42,11 +39,14 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     private TimeInfo timeInfo;
     private long currentTime;
 
+    private ViewTouchListenerForMove viewTouchListenerForMove;
+
     public TestToolActivityLifecycleCallbacks(Context context) {
         if (context == null) {
             throw new NullPointerException("Context must be not null!");
         }
         this.context = context;
+        viewTouchListenerForMove = new ViewTouchListenerForMove(context);
     }
 
     @Override
@@ -72,9 +72,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
         timeInfo = statisticRepository.getTimeInfoByActivity(activity.getClass().getName());
         currentTime = timeInfo.getTime();
 
-
-
-
         if (activity.getClass().getName().equals(EXCLUDED_ACTIVITY)) {
             return;
         }
@@ -84,7 +81,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
         if (!isButtonExists) {
             activity.getWindow().getDecorView();
-            //TODO normal
             FrameLayout frameLayout = new FrameLayout(activity);
             FrameLayout.LayoutParams rootParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
@@ -95,37 +91,10 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
             Button btn = (Button) LayoutInflater.from(context).inflate(R.layout.cool_button, null);
 
-            btn.setOnTouchListener(new ViewTouchListenerForMove(context));
+            btn.setOnTouchListener(viewTouchListenerForMove);
 
             frameLayout.addView(btn, params);
             frameLayout.setOnTouchListener((view, motionEvent) -> {
-
-                String tag = "FRAME_LAYOUT";
-
-                String event;
-
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_CANCEL:
-                        event = "cancel";
-                        break;
-                    case MotionEvent.ACTION_DOWN:
-                        event = "down";
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        event = "move";
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        event = "up";
-                        break;
-                    case MotionEvent.ACTION_OUTSIDE:
-                        event = "outside";
-                        break;
-                    default:
-                        event = "unknown";
-                        break;
-                }
-
-                Log.d(tag, event + ": " + motionEvent.getRawX() + " " + motionEvent.getRawY());
                 TouchInfo touchInfo = new TouchInfo(motionEvent.getRawX(), motionEvent.getRawY(), activity.getClass().getName());
                 statisticRepository.put(touchInfo);
                 return false;

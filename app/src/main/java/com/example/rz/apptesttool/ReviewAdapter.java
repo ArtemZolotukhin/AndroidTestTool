@@ -83,6 +83,10 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ReviewView
             checkBox.setOnCheckedChangeListener((compoundButton, b) -> {
                 setActive(checkBox.isChecked());
             });
+            itemView.findViewById(R.id.box_check_box).setOnClickListener(v -> {
+                checkBox.setChecked(!checkBox.isChecked());
+                setActive(checkBox.isChecked());
+            });
             bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
