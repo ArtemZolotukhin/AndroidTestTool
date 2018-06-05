@@ -2,6 +2,7 @@ package com.example.rz.apptesttool.view;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -10,15 +11,30 @@ public class ViewTouchListenerForMove implements View.OnTouchListener {
 
     private Context context;
 
+    /**
+     * in milliseconds
+     */
+    public static final long DEFAULT_LONG_PRESS_TIMEOUT = 800;
+
     private int lastAction;
 
     private float dX;
     private float dY;
     private int screenWight;
     private int screenHeight;
+    private long longPressTimeout;
 
     public ViewTouchListenerForMove(Context context) {
+        this(context, DEFAULT_LONG_PRESS_TIMEOUT);
+    }
+
+    /**
+     *
+     * @param longPressTimeout - in milliseconds
+     */
+    public ViewTouchListenerForMove(Context context, long longPressTimeout) {
         this.context = context;
+        this.longPressTimeout = longPressTimeout;
         fillScreenSizes();
     }
 
@@ -39,7 +55,7 @@ public class ViewTouchListenerForMove implements View.OnTouchListener {
                 lastAction = MotionEvent.ACTION_DOWN;
                 break;
             case MotionEvent.ACTION_UP:
-                if (lastAction == MotionEvent.ACTION_DOWN && (ev.getEventTime() - ev.getDownTime()) < ViewConfiguration.getLongPressTimeout()) {
+                if (lastAction == MotionEvent.ACTION_DOWN && (ev.getEventTime() - ev.getDownTime()) < this.longPressTimeout) {
                     view.callOnClick();
                 }
                 break;
