@@ -34,27 +34,20 @@ public class TouchServiceImpl implements TouchService {
 
     @Override
     public void send(List<TouchInfo> touches, Callback<Response<Void, Integer>> callback) {
-
         deviceIdService.getDeviceId(stringIntegerResponse -> {
-            if (stringIntegerResponse.isSuccessfull()) {
-                if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
-                    String deviceId = stringIntegerResponse.getValue();
-                    send(touches, callback, deviceId);
-                } else {
-                    callback.call(Response.failure(1));
-                }
+            if (stringIntegerResponse.isSuccessfullAndValueNotNull()) {
+                String deviceId = stringIntegerResponse.getValue();
+                send(touches, callback, deviceId);
             } else {
+                //TODO normal error code
                 callback.call(Response.failure(1));
             }
 
         });
-
     }
 
     public void send(List<TouchInfo> touches, Callback<Response<Void, Integer>> callback, String deviceId) {
-        SendTouchesForm form = getForm(touches, deviceId);
-        Log.d(LOG_TAG, "info: form to send: " + form.toString());
-        touchServ.send(form)
+        touchServ.send(getForm(touches, deviceId))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(sendTouchResult -> {
@@ -63,7 +56,7 @@ public class TouchServiceImpl implements TouchService {
                         callback.call(Response.success(null, 0));
                     } else {
                         Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
-                        callback.call(Response.failure(1));
+                        callback.call(Response.failure(code));
                     }
                 }, throwable -> {
                     Log.d(LOG_TAG, "Fail: Response: throwable: " + throwable.getClass().getName());
@@ -76,6 +69,7 @@ public class TouchServiceImpl implements TouchService {
         form.setTouchMap(touches);
         form.setAppId(appId);
         form.setDeviceId(deviceId);
+        Log.d(LOG_TAG, "info: form to send: " + form.toString());
         return form;
     }
 }

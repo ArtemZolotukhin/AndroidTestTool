@@ -40,7 +40,6 @@ public class ReviewToReviewFormConverterImpl implements ReviewToReviewFormConver
             }
         }
         reviewForm.setCriterions(criterionForms);
-        Log.d("AAAAAAAAAAAAA", reviewForm.toString());
         return reviewForm;
     }
 

@@ -35,30 +35,20 @@ public class TimeServiceImpl implements TimeService {
 
     @Override
     public void send(TimeInfo timeInfo, Callback<Response<Void, Integer>> callback) {
-
         deviceIdService.getDeviceId(stringIntegerResponse -> {
-            if (stringIntegerResponse.isSuccessfull()) {
-                if (stringIntegerResponse.getError() == 0 || stringIntegerResponse.getError() == null) {
-                    String deviceId = stringIntegerResponse.getValue();
-
-                    send(timeInfo, callback, deviceId);
-
-                } else {
-                    //TODO normal error codes
-                    callback.call(Response.failure(1));
-                }
+            if (stringIntegerResponse.isSuccessfullAndValueNotNull()) {
+                String deviceId = stringIntegerResponse.getValue();
+                send(timeInfo, callback, deviceId);
             } else {
+                // TODO normal error code
                 callback.call(Response.failure(1));
             }
 
         });
-
     }
 
     private void send(TimeInfo timeInfo, Callback<Response<Void, Integer>> callback, String deviceId) {
-        TimeForm form = getForm(timeInfo, deviceId);
-        Log.d(LOG_TAG, "info: form to send: " + form.toString());
-        timeServ.send(form)
+        timeServ.send(getForm(timeInfo, deviceId))
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(sendTimeResponse -> {
@@ -68,7 +58,7 @@ public class TimeServiceImpl implements TimeService {
                     } else {
                         //TODO normal error codes
                         Log.d(LOG_TAG, "Fail: Response with entry code = " + code);
-                        callback.call(Response.failure(1));
+                        callback.call(Response.failure(code));
                     }
                 }, throwable -> {
                     //TODO normal error codes
@@ -79,11 +69,12 @@ public class TimeServiceImpl implements TimeService {
     }
 
     private TimeForm getForm(TimeInfo timeInfo, String deviceId) {
-        TimeForm timeForm = new TimeForm();
-        timeForm.setAppId(appId);
-        timeForm.setDeviceId(deviceId);
-        timeForm.setDisplayName(timeInfo.getActivity());
-        timeForm.setTimeSeconds(String.valueOf(timeInfo.getTime() / 1000L));
-        return timeForm;
+        TimeForm form = new TimeForm();
+        form.setAppId(appId);
+        form.setDeviceId(deviceId);
+        form.setDisplayName(timeInfo.getActivity());
+        form.setTimeSeconds(String.valueOf(timeInfo.getTime() / 1000L));
+        Log.d(LOG_TAG, "info: form to send: " + form.toString());
+        return form;
     }
 }

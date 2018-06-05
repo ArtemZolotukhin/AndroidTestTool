@@ -41,6 +41,10 @@ public class Response<V, E> {
         return this;
     }
 
+    public boolean isSuccessfullAndValueNotNull() {
+        return isSuccessfull() && value != null;
+    }
+
     public V getValue() {
         return value;
     }

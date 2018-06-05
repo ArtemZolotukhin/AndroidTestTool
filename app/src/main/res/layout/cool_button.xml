@@ -3,6 +3,7 @@
     android:layout_width="64dp"
     android:layout_height="64dp"
     android:background="@drawable/cool_button_rounded"
+    android:layout_margin="@dimen/common_margin"
     android:text="R"
     android:padding="0dp"
     android:textColor="#f0f0f0"
