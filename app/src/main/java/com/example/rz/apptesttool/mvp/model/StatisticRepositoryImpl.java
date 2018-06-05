@@ -3,6 +3,7 @@ package com.example.rz.apptesttool.mvp.model;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.rz.apptesttool.mvp.model.providers.TimeServiceProvider;
 import com.example.rz.apptesttool.mvp.model.providers.TouchServiceProvider;
 
 import java.sql.Time;
@@ -39,24 +40,19 @@ public class StatisticRepositoryImpl implements StatisticRepository {
         touchInfo1.setActivity(touchInfo.getActivity());
         mRealm.commitTransaction();
 
-
-        ArrayList<TouchInfo> list = (ArrayList<TouchInfo>) getAllTouchInfoByActivity(touchInfo.getActivity());
+        ArrayList<TouchInfo> list = (ArrayList<TouchInfo>) getAllTouchInfo();
         if(list.size()%10 == 0) {
             mRealm.beginTransaction();
             //Toast.makeText(context, list.size() + "10 касаний", Toast.LENGTH_SHORT).show();
             TouchService service = TouchServiceProvider.get();
             service.send(list, voidIntegerResponse -> {
                 if(voidIntegerResponse.isSuccessfull()){
-                    deleteAllTouchesByActivity(touchInfo.getActivity());
+                    removeAllTouchInfo();
                     //Toast.makeText(context, "10 касаний отправлены", Toast.LENGTH_SHORT).show();
                 }
             });
             mRealm.commitTransaction();
         }
-
-
-
-        //STUB
         return true;
     }
 
@@ -174,6 +170,24 @@ public class StatisticRepositoryImpl implements StatisticRepository {
         //STUB
         return true;
     }
+
+    public void refreshDataBase() {
+        ArrayList<TimeInfo> list = (ArrayList<TimeInfo>) getAllTimeInfo();
+        if(list.size()!=0) {
+            System.out.println("!!!!!!!!!!!!!!!!!!" + list.size());
+            for (int i = 0; i <list.size() ; i++) {
+                TimeServiceProvider.get().send(list.get(i), voidIntegerResponse -> {
+                    if(voidIntegerResponse.isSuccessfull())
+                        removeAllTimeInfo();
+                });
+            }
+        }
+
+
+
+    }
+
+
 
     public static StatisticRepositoryImpl getInstance(Context context) {
         if(instance == null) {

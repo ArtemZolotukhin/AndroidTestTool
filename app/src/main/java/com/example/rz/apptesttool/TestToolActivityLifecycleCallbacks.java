@@ -55,11 +55,6 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     @Override
     public void onActivityCreated(Activity activity, Bundle bundle) {
         dropTestToolSettingsInActivity(activity);
-        TimeInfo timeInfo = new TimeInfo();
-        timeInfo.setActivity(activity.getClass().getName());
-        timeInfo.setTime(0);
-        StatisticRepositoryImpl repository = StatisticRepositoryImpl.getInstance(context);
-        repository.putTimeInfo(timeInfo);
     }
 
     @Override
@@ -72,8 +67,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
     public void onActivityResumed(Activity activity) {
         time1 = System.currentTimeMillis();
         StatisticRepositoryImpl statisticRepository = StatisticRepositoryImpl.getInstance(context);
-        timeInfo = statisticRepository.getTimeInfoByActivity(activity.getClass().getName());
-        currentTime = timeInfo.getTime();
+
 
         if (activity.getClass().getName().equals(EXCLUDED_ACTIVITY)) {
             return;
@@ -119,16 +113,11 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     @Override
     public void onActivityPaused(Activity activity) {
-        StatisticRepositoryImpl.getInstance(context).updateTimeInfo(currentTime + System.currentTimeMillis() - time1, timeInfo);
-        TimeService timeService = TimeServiceProvider.get();
-        TimeInfo timeInfo1 = new TimeInfo();
-        timeInfo1.setTime(System.currentTimeMillis() - time1);
-        timeInfo1.setActivity(activity.getClass().getName());
-        timeService.send(timeInfo1, voidIntegerResponse -> {
-            if(voidIntegerResponse.isSuccessfull()) {
-                //чё-нить надо
-            }
-        });
+        TimeInfo timeInfo = new TimeInfo();
+        timeInfo.setActivity(activity.getClass().getName());
+        timeInfo.setTime(System.currentTimeMillis() - time1);
+        StatisticRepositoryImpl.getInstance(context).putTimeInfo(timeInfo);
+        StatisticRepositoryImpl.getInstance(context).refreshDataBase();
     }
 
     @Override
@@ -143,15 +132,7 @@ public class TestToolActivityLifecycleCallbacks implements Application.ActivityL
 
     @Override
     public void onActivityDestroyed(Activity activity) {
-        TimeService timeService = TimeServiceProvider.get();
-        TimeInfo timeInfo1 = new TimeInfo();
-        timeInfo1.setTime(System.currentTimeMillis() - time1);
-        timeInfo1.setActivity(activity.getClass().getName());
-        timeService.send(timeInfo1, voidIntegerResponse -> {
-            if(voidIntegerResponse.isSuccessfull()) {
-                //чё-нить надо
-            }
-        });
+
     }
 
     private Intent getOrCreateIntent(Activity activity) {
