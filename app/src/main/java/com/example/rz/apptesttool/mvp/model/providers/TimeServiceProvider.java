@@ -10,7 +10,14 @@ import com.example.rz.apptesttool.mvp.model.TimeServiceImpl;
 
 public class TimeServiceProvider {
 
+    private static TimeService timeService;
+
     public static TimeService get() {
-        return new TimeServiceImpl(TestToolApplication.getBaseUrl(), TestToolApplication.getAppId());
+
+        if (timeService == null) {
+            timeService = new TimeServiceImpl(TestToolApplication.getBaseUrl(), TestToolApplication.getAppId());
+        }
+
+        return timeService;
     }
 }

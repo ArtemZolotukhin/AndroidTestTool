@@ -1,12 +1,8 @@
 package com.example.rz.apptesttool.mvp.presenter;
 
-import android.util.Log;
-
-import com.example.rz.apptesttool.TestToolApplication;
 import com.example.rz.apptesttool.mvp.model.Criterion;
 import com.example.rz.apptesttool.mvp.model.Review;
 import com.example.rz.apptesttool.mvp.model.ReviewService;
-import com.example.rz.apptesttool.mvp.model.ReviewServiceImpl;
 import com.example.rz.apptesttool.mvp.model.providers.ReviewServiceProvider;
 import com.example.rz.apptesttool.mvp.view.ActivityReviewView;
 
@@ -18,8 +14,6 @@ import java.util.Set;
 
 public class ActivityReviewPresenter extends AbstractPresenter {
 
-    public static final String LOG_TAG = "AAAAAAAAAAAA";
-
     private ActivityReviewView view;
 
     private ReviewService reviewService;
@@ -29,7 +23,6 @@ public class ActivityReviewPresenter extends AbstractPresenter {
             throw new NullPointerException("ActivityReviewView must be not null");
         }
         this.view = view;
-        // TODO may be Dagger 2
         this.reviewService = ReviewServiceProvider.get();
         loadCriterions();
     }
@@ -49,7 +42,6 @@ public class ActivityReviewPresenter extends AbstractPresenter {
                             showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                         }
                     } else {
-                        Log.d(LOG_TAG, String.valueOf(criterionsResponse.getError()));
                         showError(ActivityReviewView.ERROR_CODE_CRITERIONS_LOAD);
                     }
                 }

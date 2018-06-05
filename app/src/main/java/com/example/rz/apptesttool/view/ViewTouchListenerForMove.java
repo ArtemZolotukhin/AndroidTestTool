@@ -2,10 +2,8 @@ package com.example.rz.apptesttool.view;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 
 public class ViewTouchListenerForMove implements View.OnTouchListener {
 

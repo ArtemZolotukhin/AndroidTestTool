@@ -37,12 +37,9 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
     public static final String PARAM_IS_LOADING = ActivityReviewActivity.class.getClass().getName() + ":is_loading";
 
     private ActivityReviewPresenter presenter;
-    private RecyclerView recyclerView;
     private ReviewAdapter reviewAdapter;
     private ScrollView scrollView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private Button mSendButton;
-    private Button mCancelButton;
     private View boxSend;
     private View vError;
     private boolean isError;
@@ -56,13 +53,11 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         setContentView(R.layout.activity_activity_review);
         isError = false;
         isLoading = false;
-        mSendButton = findViewById(R.id.btn_confirm);
-        mCancelButton = findViewById(R.id.btn_cancel);
         etReview = findViewById(R.id.et_review);
         vError = findViewById(R.id.tv_error);
         boxSend = findViewById(R.id.box_send);
 
-        mSendButton.setOnClickListener(view -> {
+        findViewById(R.id.btn_confirm).setOnClickListener(view -> {
             if (presenter  != null) {
                 presenter.onSendClick();
             }
@@ -72,7 +67,7 @@ public class ActivityReviewActivity extends AppCompatActivity implements Activit
         swipeRefreshLayout.setEnabled(true);
         swipeRefreshLayout.setOnRefreshListener(this);
         scrollView = findViewById(R.id.box_criteries);
-        recyclerView = findViewById(R.id.rv_criterions);
+        RecyclerView recyclerView = findViewById(R.id.rv_criterions);
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
         reviewAdapter = new ReviewAdapter(this);
         recyclerView.setAdapter(reviewAdapter);

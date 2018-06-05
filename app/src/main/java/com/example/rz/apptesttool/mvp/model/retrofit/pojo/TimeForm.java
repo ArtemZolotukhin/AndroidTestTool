@@ -50,4 +50,13 @@ public class TimeForm {
         this.timeSeconds = timeSeconds;
     }
 
+    @Override
+    public String toString() {
+        return "TimeForm{" +
+                "appId='" + appId + '\'' +
+                ", deviceId='" + deviceId + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", timeSeconds='" + timeSeconds + '\'' +
+                '}';
+    }
 }
